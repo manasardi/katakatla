@@ -28,7 +28,6 @@ async function loadDailyWords() {
   }
   dailyWords = data.sort((a, b) => a.slot - b.slot);
   console.log(`🎯 ${dailyWords.length} kata harian loaded`);
-  console.log('🎯 Targets (debug):', dailyWords.map(w => `${w.slot}:${w.word}`).join(', '));
   return true;
 }
 
@@ -438,7 +437,7 @@ function showSlotEndModal(isWin, attempt) {
 function goToNextSlot() {
   state.currentSlot++;
   resetForNextSlot();
-  console.log(`▶ Slot ${state.currentSlot}: ${getCurrentTarget()?.word}`);
+  console.log(`▶ Lanjut slot ${state.currentSlot}`);
 }
 
 function showDayCompleteModal() {
@@ -617,7 +616,7 @@ buildKeyboard();
   }
   
   state.currentSlot = nextSlot;
-  console.log(`▶ Mulai dari slot ${nextSlot}: ${getCurrentTarget()?.word}`);
+  console.log(`▶ Mulai dari slot ${nextSlot}`);
   
   if (nextSlot > 1) {
     showToast(`lanjut slot ${nextSlot} dari ${TOTAL_SLOTS}`);
