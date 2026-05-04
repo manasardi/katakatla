@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>leaderboard — katakatla</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <a href="index.html" class="logo-link">
+      <h1 class="logo">katakatla</h1>
+    </a>
+    <p class="page-label">leaderboard</p>
+  </header>
+
+  <main class="lb-page">
+    <a href="index.html" class="back-link">← kembali ke game</a>
+
+    <div class="lb-tabs">
+      <button class="lb-tab active" data-period="daily">harian</button>
+      <button class="lb-tab" data-period="weekly">mingguan</button>
+      <button class="lb-tab" data-period="monthly">bulanan</button>
+    </div>
+
+    <div id="lb-info" class="lb-info"></div>
+
+    <div id="lb-loading" class="lb-loading">memuat...</div>
+
+    <table id="lb-table" class="lb-table hidden">
+      <thead>
+        <tr>
+          <th class="col-rank">#</th>
+          <th class="col-name">username</th>
+          <th class="col-solved">selesai</th>
+          <th class="col-score">skor</th>
+        </tr>
+      </thead>
+      <tbody id="lb-tbody"></tbody>
+    </table>
+
+    <div id="lb-empty" class="lb-empty hidden">belum ada pemain. jadilah yang pertama!</div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
+  <script src="leaderboard.js"></script>
+</body>
+</html>

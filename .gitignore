@@ -1,0 +1,14 @@
+# File temporary dari setup awal
+kbbi_raw.txt
+filter.js
+words_5letter.csv
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# VSCode
+.vscode/
+
+# Logs
+*.log

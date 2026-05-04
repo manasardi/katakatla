@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>katakatla — tebak kata 5 huruf</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <h1 class="logo">katakatla</h1>
+    <p class="subtitle">lima huruf · enam tebakan · setiap hari</p>
+    <div class="topbar-nav">
+      <a href="leaderboard.html" class="lb-link">🏆 leaderboard</a>
+      <a href="stats.html" class="lb-link">📊 stats</a>
+    </div>
+  </header>
+
+  <main class="game">
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <div id="grid" class="grid"></div>
+    <div id="keyboard" class="keyboard"></div>
+  </main>
+
+  <!-- Modal: hasil slot / day complete -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <h2 id="modal-title"></h2>
+      <p id="modal-message"></p>
+      <button id="modal-share-btn" class="btn-secondary hidden">📤 share hasil</button>
+      <button id="modal-button" class="btn-primary">main lagi</button>
+    </div>
+  </div>
+
+  <!-- Modal: username prompt -->
+  <div id="username-modal" class="modal hidden">
+    <div class="modal-content">
+      <h2>pilih username</h2>
+      <p class="modal-subtext">nama yang muncul di leaderboard. bisa di-skip kalau cuma mau main biasa.</p>
+      <input
+        id="username-input"
+        class="username-input"
+        type="text"
+        placeholder="misal: anas123"
+        maxlength="20"
+        autocomplete="off"
+        spellcheck="false"
+      >
+      <p id="username-error" class="username-error"></p>
+      <button id="username-set-btn" class="btn-primary">set username</button>
+      <button id="username-skip-btn" class="btn-secondary">lewati saja</button>
+    </div>
+  </div>
+
+  <!-- Supabase JS Client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
