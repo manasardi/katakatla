@@ -360,7 +360,7 @@ ${emojiGrid}
 
 ${scoreText} · ${guessesText}
 
-main: 127.0.0.1:5500`;
+main: katakatla.vercel.app`;
 }
 
 async function handleShare(isWin, attempt) {
