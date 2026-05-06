@@ -900,7 +900,7 @@ body {
   letter-spacing: 0.02em;
 }
 
-/* ===== STREAK BADGE ===== */
+/* ===== STREAK BADGE (topbar) ===== */
 
 #streak-badge {
   background: linear-gradient(135deg, rgba(212, 162, 43, 0.18), rgba(212, 162, 43, 0.08));
@@ -995,4 +995,27 @@ body {
 @media (max-width: 480px) {
   .profile-card { padding: 0.85rem 1rem; }
   .profile-name { font-size: 0.95rem; }
+}
+
+/* ===== LEADERBOARD STREAK INLINE ===== */
+
+.streak-inline {
+  display: inline-block;
+  margin-left: 0.4rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--correct);
+  background: rgba(45, 125, 111, 0.1);
+  padding: 1px 6px;
+  border-radius: 10px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+@media (max-width: 480px) {
+  .streak-inline { 
+    font-size: 0.7rem;
+    padding: 1px 5px;
+  }
 }

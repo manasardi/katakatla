@@ -64,10 +64,13 @@ function renderRows(rows) {
       tr.classList.add('is-me');
     }
     
-    // FIX: pakai kolom baru `solved` & `played` dari SQL function
+    const streakBadge = row.streak > 0 
+      ? `<span class="streak-inline">🔥${row.streak}</span>` 
+      : '';
+    
     tr.innerHTML = `
       <td class="col-rank">${row.rank}</td>
-      <td class="col-name">${escapeHtml(row.username)}</td>
+      <td class="col-name">${escapeHtml(row.username)} ${streakBadge}</td>
       <td class="col-solved">${row.solved}/${row.played}</td>
       <td class="col-score">${row.total_score}</td>
     `;
