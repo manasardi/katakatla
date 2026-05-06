@@ -1,6 +1,6 @@
 /* =========================================
    KATAKATLA — GAME LOGIC
-   Phase 4 + 15 (validation) + 16 (share)
+   Phase 4 + 15 + 16 + 17 + persist + howto + history nav
 ========================================= */
 
 // ===== KONFIGURASI =====
@@ -8,6 +8,14 @@ const WORD_LENGTH = 5;
 const MAX_GUESSES = 6;
 const TOTAL_SLOTS = 5;
 const USERNAME_ASKED_KEY = 'katakatla_username_asked';
+const HOWTO_SEEN_KEY = 'katakatla_howto_seen';
+let viewingSlot = null;  // null = mode normal, number = mode preview
+
+// Daily words: array dari 5 slot
+let dailyWords = [];
+
+// Validation: semua kata valid (Set buat O(1) lookup)
+let validWords = new Set();
 
 // ===== HISTORY HELPERS (localStorage) =====
 function getHistoryKey(date, slot) {
@@ -28,7 +36,6 @@ function loadHistory(slot) {
 }
 
 function renderHistoryToGrid(guesses, targetWord) {
-  // Render setiap tebakan dengan warna-nya tanpa animasi delay
   guesses.forEach((guess, rowIdx) => {
     const target = targetWord.split('');
     const result = ['absent','absent','absent','absent','absent'];
@@ -54,16 +61,57 @@ function renderHistoryToGrid(guesses, targetWord) {
       tile.classList.add('filled', result[i]);
     }
     
-    // Update keyboard juga
     updateKeyboardColors(guess, result);
   });
 }
 
-// Daily words: array dari 5 slot
-let dailyWords = [];
+function clearGrid() {
+  gridEl.querySelectorAll('.tile').forEach(tile => {
+    tile.textContent = '';
+    tile.className = 'tile';
+  });
+  keyboardEl.querySelectorAll('.kb-key').forEach(key => {
+    key.classList.remove('correct', 'present', 'absent');
+  });
+}
 
-// Validation: semua kata valid (Set buat O(1) lookup)
-let validWords = new Set();
+function previewSlot(slotNum) {
+  const guesses = loadHistory(slotNum);
+  const target = dailyWords.find(w => w.slot === slotNum);
+  
+  if (!guesses || !target) {
+    showToast('belum ada riwayat di slot ini');
+    return;
+  }
+  
+  clearGrid();
+  renderHistoryToGrid(guesses, target.word);
+  viewingSlot = slotNum;
+  
+  state.isGameOver = true;  // disable input saat preview
+  
+  showToast(`riwayat slot ${slotNum}`);
+}
+
+function exitPreviewMode() {
+  if (viewingSlot === null) return;
+  
+  viewingSlot = null;
+  clearGrid();
+  
+  const currentGuesses = loadHistory(state.currentSlot);
+  const currentTarget = getCurrentTarget();
+  
+  if (currentGuesses && currentTarget) {
+    state.guesses = currentGuesses;
+    state.currentRow = currentGuesses.length;
+    renderHistoryToGrid(currentGuesses, currentTarget.word);
+  }
+  
+  if (!state.isDayComplete && state.currentRow < MAX_GUESSES) {
+    state.isGameOver = false;
+  }
+}
 
 async function loadDailyWords() {
   const { data, error } = await supabaseClient.rpc('get_daily_words');
@@ -113,7 +161,6 @@ async function loadValidWords() {
   return true;
 }
 
-// Cek slot mana yang user udah selesai hari ini
 async function loadUserProgress() {
   const { data: { user } } = await supabaseClient.auth.getUser();
   if (!user) return [];
@@ -280,7 +327,6 @@ function submitGuess() {
   
   const guess = getCurrentGuess();
   
-  // Validate: kata harus ada di kamus
   if (!validWords.has(guess)) {
     showToast('kata tidak ada di kamus');
     shakeRow();
@@ -288,7 +334,7 @@ function submitGuess() {
   }
   
   state.guesses.push(guess);
-  saveHistory(state.currentSlot, state.guesses);  // ← BARU
+  saveHistory(state.currentSlot, state.guesses);
   colorTiles(guess, target.word);
 
   if (guess === target.word) {
@@ -373,7 +419,6 @@ function buildShareText(isWin, attempt) {
     day: 'numeric', month: 'long', year: 'numeric'
   });
   
-  // Build emoji grid dari state.guesses
   const target = getCurrentTarget().word;
   const emojiGrid = state.guesses.map(guess => {
     const targetArr = target.split('');
@@ -416,7 +461,6 @@ main: katakatla.vercel.app`;
 async function handleShare(isWin, attempt) {
   const text = buildShareText(isWin, attempt);
   
-  // Coba Web Share API dulu
   if (navigator.share) {
     try {
       await navigator.share({
@@ -431,7 +475,6 @@ async function handleShare(isWin, attempt) {
     }
   }
   
-  // Fallback: copy to clipboard
   try {
     await navigator.clipboard.writeText(text);
     showToast('hasil disalin ke clipboard');
@@ -474,7 +517,6 @@ function showSlotEndModal(isWin, attempt) {
     };
   }
   
-  // Show share button (cuma kalau menang & ada attempt valid)
   if (isWin && attempt) {
     modalShareBtnEl.classList.remove('hidden');
     modalShareBtnEl.onclick = () => handleShare(isWin, attempt);
@@ -584,6 +626,11 @@ document.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') usernameSetBtnEl.click();
     return;
   }
+  // Esc keluar dari preview mode
+  if (e.key === 'Escape' && viewingSlot !== null) {
+    exitPreviewMode();
+    return;
+  }
   if (state.isGameOver) return;
   if (e.key === 'Enter') handleKey('enter');
   else if (e.key === 'Backspace') handleKey('back');
@@ -636,6 +683,86 @@ async function saveAttempt(isSolved) {
 buildGrid();
 buildKeyboard();
 
+// ===== HOW TO PLAY MODAL =====
+const howtoBtn = document.getElementById('howto-btn');
+const howtoModal = document.getElementById('howto-modal');
+const howtoCloseEl = document.getElementById('howto-close');
+const howtoOkEl = document.getElementById('howto-ok');
+
+function openHowto() {
+  howtoModal.classList.remove('hidden');
+}
+
+function closeHowto() {
+  howtoModal.classList.add('hidden');
+  localStorage.setItem(HOWTO_SEEN_KEY, 'true');
+}
+
+if (howtoBtn) howtoBtn.addEventListener('click', openHowto);
+if (howtoCloseEl) howtoCloseEl.addEventListener('click', closeHowto);
+if (howtoOkEl) howtoOkEl.addEventListener('click', closeHowto);
+
+// Auto-show untuk first-time visitor
+if (!localStorage.getItem(HOWTO_SEEN_KEY)) {
+  setTimeout(openHowto, 800);
+}
+
+// ===== HISTORY MODAL =====
+const historyBtn = document.getElementById('history-btn');
+const historyModal = document.getElementById('history-modal');
+const historyCloseEl = document.getElementById('history-close');
+const historySlotsEl = document.getElementById('history-slots');
+const historyEmptyEl = document.getElementById('history-empty');
+
+function buildHistorySlots() {
+  historySlotsEl.innerHTML = '';
+  let hasAnyHistory = false;
+  
+  for (let s = 1; s <= TOTAL_SLOTS; s++) {
+    const guesses = loadHistory(s);
+    const hasHistory = guesses && guesses.length > 0;
+    if (hasHistory) hasAnyHistory = true;
+    
+    const target = dailyWords.find(w => w.slot === s);
+    const isSolved = hasHistory && target && guesses.includes(target.word);
+    
+    const btn = document.createElement('button');
+    btn.className = 'history-slot-btn';
+    btn.type = 'button';
+    
+    if (viewingSlot === s) btn.classList.add('active');
+    if (!hasHistory) btn.disabled = true;
+    
+    let statusText = '–';
+    if (hasHistory) {
+      statusText = isSolved ? `${guesses.length}/6 ✓` : `${guesses.length}/6`;
+    }
+    
+    btn.innerHTML = `${s}<span class="slot-status">${statusText}</span>`;
+    btn.addEventListener('click', () => {
+      if (!hasHistory) return;
+      previewSlot(s);
+      historyModal.classList.add('hidden');
+    });
+    
+    historySlotsEl.appendChild(btn);
+  }
+  
+  historyEmptyEl.classList.toggle('hidden', hasAnyHistory);
+}
+
+function openHistory() {
+  buildHistorySlots();
+  historyModal.classList.remove('hidden');
+}
+
+function closeHistory() {
+  historyModal.classList.add('hidden');
+}
+
+if (historyBtn) historyBtn.addEventListener('click', openHistory);
+if (historyCloseEl) historyCloseEl.addEventListener('click', closeHistory);
+
 (async function init() {
   const [wordsLoaded, validLoaded] = await Promise.all([
     loadDailyWords(),
@@ -671,7 +798,7 @@ buildKeyboard();
       state.currentSlot = lastSlot;
       state.guesses = lastGuesses;
       state.currentRow = lastGuesses.length;
-      state.isGameOver = true;  // disable input
+      state.isGameOver = true;
       renderHistoryToGrid(lastGuesses, lastTarget.word);
       console.log(`📜 Mode read-only: nampilkan slot ${lastSlot}`);
     }

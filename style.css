@@ -676,3 +676,193 @@ body {
     font-size: 0.85rem;
   }
 }
+
+/* ===== HOW TO PLAY MODAL ===== */
+
+.howto-content {
+  max-width: 480px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 1.5rem 1.75rem;
+  position: relative;
+}
+
+.modal-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  background: transparent;
+  border: none;
+  font-size: 1.2rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  transition: background 0.15s;
+}
+.modal-close:hover {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.howto-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  font-variation-settings: 'opsz' 72;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.howto-intro {
+  font-size: 0.95rem;
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
+}
+
+.howto-rule {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
+}
+
+.howto-section {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+
+.howto-example {
+  margin-bottom: 0.75rem;
+}
+
+.howto-row {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 0.4rem;
+}
+
+.howto-tile {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  text-transform: uppercase;
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--text);
+}
+
+.howto-tile.correct {
+  background: var(--correct);
+  border-color: var(--correct);
+  color: white;
+}
+
+.howto-tile.present {
+  background: var(--present);
+  border-color: var(--present);
+  color: white;
+}
+
+.howto-tile.absent {
+  background: var(--absent);
+  border-color: var(--absent);
+  color: white;
+}
+
+.howto-caption {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+}
+
+.howto-list {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  padding-left: 1.25rem;
+  line-height: 1.7;
+}
+
+.howto-list li {
+  margin-bottom: 0.25rem;
+}
+
+#howto-ok {
+  margin-top: 1.25rem;
+  width: 100%;
+}
+
+/* Mobile adjust */
+@media (max-width: 480px) {
+  .howto-content { padding: 1.25rem 1rem; }
+  .howto-tile { width: 32px; height: 32px; font-size: 0.85rem; }
+}
+
+/* ===== HISTORY MODAL ===== */
+
+.history-content {
+  max-width: 360px;
+  padding: 1.5rem 1.5rem 1.75rem;
+  position: relative;
+}
+
+.history-slots {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.history-slot-btn {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.1rem;
+  font-variation-settings: 'opsz' 72;
+  padding: 1rem 0;
+  border: 2px solid var(--border);
+  border-radius: 6px;
+  background: var(--surface);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s;
+  position: relative;
+}
+
+.history-slot-btn:hover:not(:disabled) {
+  background: var(--correct);
+  border-color: var(--correct);
+  color: white;
+  transform: translateY(-2px);
+}
+
+.history-slot-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+  background: var(--bg);
+}
+
+.history-slot-btn.active {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--surface);
+}
+
+.history-slot-btn .slot-status {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 500;
+  font-family: var(--font-body);
+  margin-top: 0.25rem;
+  opacity: 0.7;
+}

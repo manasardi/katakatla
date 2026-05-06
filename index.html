@@ -19,6 +19,8 @@
     <div class="topbar-nav">
       <a href="leaderboard.html" class="lb-link">🏆 leaderboard</a>
       <a href="stats.html" class="lb-link">📊 stats</a>
+      <button id="howto-btn" class="lb-link" type="button">❓ cara main</button>
+      <button id="history-btn" class="lb-link" type="button">📋 riwayat</button>
     </div>
   </header>
 
@@ -33,8 +35,8 @@
     <div class="modal-content">
       <h2 id="modal-title"></h2>
       <p id="modal-message"></p>
-      <button id="modal-share-btn" class="btn-secondary hidden">📤 share hasil</button>
-      <button id="modal-button" class="btn-primary">main lagi</button>
+      <button id="modal-share-btn" class="btn-secondary hidden" type="button">📤 share hasil</button>
+      <button id="modal-button" class="modal-button" type="button"></button>
     </div>
   </div>
 
@@ -42,23 +44,99 @@
   <div id="username-modal" class="modal hidden">
     <div class="modal-content">
       <h2>pilih username</h2>
-      <p class="modal-subtext">nama yang muncul di leaderboard. bisa di-skip kalau cuma mau main biasa.</p>
-      <input
-        id="username-input"
-        class="username-input"
-        type="text"
-        placeholder="misal: anas123"
-        maxlength="20"
-        autocomplete="off"
-        spellcheck="false"
-      >
+      <p class="username-hint">nama ini bakal muncul di leaderboard. bisa di-skip kalau mau anonim.</p>
+      <input type="text" id="username-input" placeholder="contoh: anas123" maxlength="20" autocomplete="off">
       <p id="username-error" class="username-error"></p>
-      <button id="username-set-btn" class="btn-primary">set username</button>
-      <button id="username-skip-btn" class="btn-secondary">lewati saja</button>
+      <div class="username-actions">
+        <button id="username-skip-btn" class="btn-secondary" type="button">skip</button>
+        <button id="username-set-btn" class="modal-button" type="button">set username</button>
+      </div>
     </div>
   </div>
 
-  <!-- Supabase JS Client -->
+  <!-- Modal: How to Play -->
+  <div id="howto-modal" class="modal hidden">
+    <div class="modal-content howto-content">
+      <button id="howto-close" class="modal-close" type="button" aria-label="tutup">✕</button>
+      <h2 class="howto-title">cara main</h2>
+      
+      <p class="howto-intro">
+        tebak <strong>kata bahasa indonesia</strong> 5 huruf dalam 6 percobaan.
+      </p>
+      
+      <p class="howto-rule">
+        setiap tebakan harus berupa kata 5 huruf yang valid. tekan tombol <strong>enter</strong> untuk mengirim.
+      </p>
+      
+      <p class="howto-rule">
+        setelah setiap tebakan, warna kotak akan berubah untuk menunjukkan seberapa dekat tebakanmu dengan kata target.
+      </p>
+      
+      <h3 class="howto-section">contoh</h3>
+      
+      <div class="howto-example">
+        <div class="howto-row">
+          <div class="howto-tile correct">B</div>
+          <div class="howto-tile">U</div>
+          <div class="howto-tile">K</div>
+          <div class="howto-tile">U</div>
+          <div class="howto-tile">T</div>
+        </div>
+        <p class="howto-caption">huruf <strong>B</strong> ada di kata target dan posisinya benar.</p>
+      </div>
+      
+      <div class="howto-example">
+        <div class="howto-row">
+          <div class="howto-tile">P</div>
+          <div class="howto-tile present">A</div>
+          <div class="howto-tile">N</div>
+          <div class="howto-tile">A</div>
+          <div class="howto-tile">S</div>
+        </div>
+        <p class="howto-caption">huruf <strong>A</strong> ada di kata target tapi posisinya salah.</p>
+      </div>
+      
+      <div class="howto-example">
+        <div class="howto-row">
+          <div class="howto-tile">M</div>
+          <div class="howto-tile">A</div>
+          <div class="howto-tile">N</div>
+          <div class="howto-tile">I</div>
+          <div class="howto-tile absent">S</div>
+        </div>
+        <p class="howto-caption">huruf <strong>S</strong> tidak ada di kata target.</p>
+      </div>
+      
+      <h3 class="howto-section">aturan tambahan</h3>
+      
+      <ul class="howto-list">
+        <li>setiap hari ada <strong>5 slot</strong> dengan kata berbeda</li>
+        <li>kata target sama untuk semua pemain</li>
+        <li>skor dihitung dari jumlah tebakan + kecepatan</li>
+        <li>kata-kata baru tersedia setiap hari pukul 00:00 wib</li>
+      </ul>
+      
+      <button id="howto-ok" class="modal-button" type="button">mengerti, mulai main</button>
+    </div>
+  </div>
+
+  <!-- Modal: Riwayat slot -->
+  <div id="history-modal" class="modal hidden">
+    <div class="modal-content history-content">
+      <button id="history-close" class="modal-close" type="button" aria-label="tutup">✕</button>
+      <h2 class="howto-title">riwayat hari ini</h2>
+      <p class="howto-rule" style="text-align:center;">pilih slot untuk lihat tebakan kamu di slot itu.</p>
+      
+      <div id="history-slots" class="history-slots">
+        <!-- Tombol slot dibuat via JS -->
+      </div>
+      
+      <p id="history-empty" class="empty-note hidden">
+        kamu belum main slot apapun hari ini.
+      </p>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-client.js"></script>
   <script src="app.js"></script>
