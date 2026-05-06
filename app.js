@@ -9,6 +9,56 @@ const MAX_GUESSES = 6;
 const TOTAL_SLOTS = 5;
 const USERNAME_ASKED_KEY = 'katakatla_username_asked';
 
+// ===== HISTORY HELPERS (localStorage) =====
+function getHistoryKey(date, slot) {
+  return `katakatla_history_${date}_slot${slot}`;
+}
+
+function saveHistory(slot, guesses) {
+  const today = new Date().toISOString().split('T')[0];
+  const key = getHistoryKey(today, slot);
+  localStorage.setItem(key, JSON.stringify(guesses));
+}
+
+function loadHistory(slot) {
+  const today = new Date().toISOString().split('T')[0];
+  const key = getHistoryKey(today, slot);
+  const data = localStorage.getItem(key);
+  return data ? JSON.parse(data) : null;
+}
+
+function renderHistoryToGrid(guesses, targetWord) {
+  // Render setiap tebakan dengan warna-nya tanpa animasi delay
+  guesses.forEach((guess, rowIdx) => {
+    const target = targetWord.split('');
+    const result = ['absent','absent','absent','absent','absent'];
+    const targetCounts = {};
+    for (const ch of target) targetCounts[ch] = (targetCounts[ch] || 0) + 1;
+
+    for (let i = 0; i < WORD_LENGTH; i++) {
+      if (guess[i] === target[i]) {
+        result[i] = 'correct';
+        targetCounts[guess[i]]--;
+      }
+    }
+    for (let i = 0; i < WORD_LENGTH; i++) {
+      if (result[i] === 'absent' && targetCounts[guess[i]] > 0) {
+        result[i] = 'present';
+        targetCounts[guess[i]]--;
+      }
+    }
+    
+    for (let i = 0; i < WORD_LENGTH; i++) {
+      const tile = getTile(rowIdx, i);
+      tile.textContent = guess[i];
+      tile.classList.add('filled', result[i]);
+    }
+    
+    // Update keyboard juga
+    updateKeyboardColors(guess, result);
+  });
+}
+
 // Daily words: array dari 5 slot
 let dailyWords = [];
 
@@ -238,6 +288,7 @@ function submitGuess() {
   }
   
   state.guesses.push(guess);
+  saveHistory(state.currentSlot, state.guesses);  // ← BARU
   colorTiles(guess, target.word);
 
   if (guess === target.word) {
@@ -611,12 +662,36 @@ buildKeyboard();
   
   if (nextSlot > TOTAL_SLOTS) {
     state.isDayComplete = true;
+    
+    // Render history slot 5 (terakhir) ke grid
+    const lastSlot = TOTAL_SLOTS;
+    const lastGuesses = loadHistory(lastSlot);
+    const lastTarget = dailyWords.find(w => w.slot === lastSlot);
+    if (lastGuesses && lastTarget) {
+      state.currentSlot = lastSlot;
+      state.guesses = lastGuesses;
+      state.currentRow = lastGuesses.length;
+      state.isGameOver = true;  // disable input
+      renderHistoryToGrid(lastGuesses, lastTarget.word);
+      console.log(`📜 Mode read-only: nampilkan slot ${lastSlot}`);
+    }
+    
     showDayCompleteModal();
     return;
   }
   
   state.currentSlot = nextSlot;
   console.log(`▶ Mulai dari slot ${nextSlot}`);
+  
+  // Load history slot ini kalau ada (resume di tengah)
+  const savedGuesses = loadHistory(nextSlot);
+  if (savedGuesses && savedGuesses.length > 0) {
+    const target = getCurrentTarget();
+    state.guesses = savedGuesses;
+    state.currentRow = savedGuesses.length;
+    renderHistoryToGrid(savedGuesses, target.word);
+    console.log(`📜 Resume dari ${savedGuesses.length} tebakan tersimpan`);
+  }
   
   if (nextSlot > 1) {
     showToast(`lanjut slot ${nextSlot} dari ${TOTAL_SLOTS}`);
