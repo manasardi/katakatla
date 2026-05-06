@@ -1,6 +1,6 @@
 /* =========================================
    KATAKATLA — LEADERBOARD
-   Phase 4C: Fetch & render top 50 (harian/mingguan/bulanan)
+   Phase 4C + dynamic played/solved
 ========================================= */
 
 const tabsEl = document.querySelectorAll('.lb-tab');
@@ -55,17 +55,6 @@ function showTable() {
   emptyEl.classList.add('hidden');
 }
 
-function formatDuration(totalSeconds) {
-  const minutes = Math.floor(totalSeconds / 60);
-  const seconds = totalSeconds % 60;
-  if (minutes >= 60) {
-    const hours = Math.floor(minutes / 60);
-    const mins = minutes % 60;
-    return `${hours}j ${mins}m`;
-  }
-  return `${minutes}m ${seconds}d`;
-}
-
 function renderRows(rows) {
   tbodyEl.innerHTML = '';
   
@@ -75,10 +64,11 @@ function renderRows(rows) {
       tr.classList.add('is-me');
     }
     
+    // FIX: pakai kolom baru `solved` & `played` dari SQL function
     tr.innerHTML = `
       <td class="col-rank">${row.rank}</td>
       <td class="col-name">${escapeHtml(row.username)}</td>
-      <td class="col-solved">${row.games_solved}/5</td>
+      <td class="col-solved">${row.solved}/${row.played}</td>
       <td class="col-score">${row.total_score}</td>
     `;
     tbodyEl.appendChild(tr);
@@ -115,7 +105,6 @@ async function loadLeaderboard(period) {
     renderRows(data);
     showTable();
     
-    // Cek user di rank berapa
     const myRow = data.find(r => r.user_id === currentUserId);
     if (myRow) {
       console.log(`📊 Kamu di rank #${myRow.rank} (${period})`);
@@ -128,7 +117,6 @@ async function loadLeaderboard(period) {
 
 // ===== INIT =====
 (async function init() {
-  // Ambil current user untuk highlight di tabel
   const { data: { user } } = await supabaseClient.auth.getUser();
   if (user) {
     currentUserId = user.id;
