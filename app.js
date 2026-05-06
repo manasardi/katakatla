@@ -183,6 +183,36 @@ async function loadUserProgress() {
   return completedSlots;
 }
 
+async function loadStreak() {
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) return 0;
+  
+  const { data, error } = await supabaseClient.rpc('get_user_stats', {
+    p_user_id: user.id
+  });
+  
+  if (error) {
+    console.error('❌ Gagal load streak:', error.message);
+    return 0;
+  }
+  
+  return (data && data.streak) ? data.streak : 0;
+}
+
+function updateStreakBadge(streak) {
+  const badge = document.getElementById('streak-badge');
+  const countEl = document.getElementById('streak-count');
+  
+  if (!badge || !countEl) return;
+  
+  if (streak > 0) {
+    countEl.textContent = streak;
+    badge.classList.remove('streak-hidden');
+  } else {
+    badge.classList.add('streak-hidden');
+  }
+}
+
 // ===== STATE =====
 const state = {
   currentSlot: 1,
@@ -486,6 +516,7 @@ async function handleShare(isWin, attempt) {
 
 // ===== MODAL: end-of-slot =====
 function showSlotEndModal(isWin, attempt) {
+  stopCountdown();  // ← BARU: pastiin countdown nggak muncul di modal slot end biasa
   const target = getCurrentTarget();
   const isLastSlot = state.currentSlot >= TOTAL_SLOTS;
   
@@ -538,9 +569,73 @@ function showDayCompleteModal() {
   modalTitleEl.textContent = '🏆 selesai!';
   modalMessageEl.textContent = `kamu udah main 5 slot hari ini. balik lagi besok untuk kata-kata baru.`;
   modalButtonEl.textContent = 'tutup';
-  modalButtonEl.onclick = () => modalEl.classList.add('hidden');
+  modalButtonEl.onclick = () => {
+    modalEl.classList.add('hidden');
+    stopCountdown();
+  };
   modalShareBtnEl.classList.add('hidden');
+  startCountdown();  // ← BARU
   modalEl.classList.remove('hidden');
+}
+
+// ===== COUNTDOWN TIMER =====
+let countdownInterval = null;
+const countdownBlockEl = document.getElementById('countdown-block');
+const countdownTimeEl = document.getElementById('countdown-time');
+
+function getNextResetTime() {
+  // Reset = UTC 00:00 = WIB 07:00
+  const now = new Date();
+  const next = new Date(now);
+  next.setUTCHours(0, 0, 0, 0);
+  // Kalau sekarang udah lewat UTC midnight hari ini, set ke besok
+  if (next <= now) {
+    next.setUTCDate(next.getUTCDate() + 1);
+  }
+  return next;
+}
+
+function formatCountdown(msUntilReset) {
+  const totalMinutes = Math.floor(msUntilReset / 60000);
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  
+  if (hours > 0) {
+    return `${hours} jam ${minutes} menit`;
+  } else if (minutes > 0) {
+    return `${minutes} menit`;
+  } else {
+    const seconds = Math.floor((msUntilReset % 60000) / 1000);
+    return `${seconds} detik`;
+  }
+}
+
+function updateCountdown() {
+  const reset = getNextResetTime();
+  const now = new Date();
+  const ms = reset - now;
+  
+  if (ms <= 0) {
+    countdownTimeEl.textContent = 'segera!';
+    return;
+  }
+  
+  countdownTimeEl.textContent = formatCountdown(ms);
+}
+
+function startCountdown() {
+  countdownBlockEl.classList.remove('hidden');
+  updateCountdown();
+  // Update tiap 30 detik (cukup, nggak perlu real-time per-detik)
+  countdownInterval = setInterval(updateCountdown, 30000);
+}
+
+function stopCountdown() {
+  if (countdownInterval) {
+    clearInterval(countdownInterval);
+    countdownInterval = null;
+  }
+  countdownBlockEl.classList.add('hidden');
 }
 
 // ===== USERNAME PROMPT =====
@@ -777,6 +872,9 @@ if (historyCloseEl) historyCloseEl.addEventListener('click', closeHistory);
   }
   
   const completedSlots = await loadUserProgress();
+  
+  // Load streak dan update badge
+  loadStreak().then(streak => updateStreakBadge(streak));
   
   let nextSlot = 1;
   for (let s = 1; s <= TOTAL_SLOTS; s++) {

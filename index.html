@@ -19,6 +19,7 @@
     <div class="topbar-nav">
       <a href="leaderboard.html" class="lb-link">🏆 leaderboard</a>
       <a href="stats.html" class="lb-link">📊 stats</a>
+      <a href="stats.html" id="streak-badge" class="lb-link streak-hidden">🔥 <span id="streak-count">0</span></a>
       <button id="howto-btn" class="lb-link" type="button">❓ cara main</button>
       <button id="history-btn" class="lb-link" type="button">📋 riwayat</button>
     </div>
@@ -35,6 +36,10 @@
     <div class="modal-content">
       <h2 id="modal-title"></h2>
       <p id="modal-message"></p>
+      <div id="countdown-block" class="countdown-block hidden">
+        <p class="countdown-text">kata baru dalam <span id="countdown-time">–</span></p>
+        <p class="countdown-meta">reset 07:00 WIB</p>
+      </div>
       <button id="modal-share-btn" class="btn-secondary hidden" type="button">📤 share hasil</button>
       <button id="modal-button" class="modal-button" type="button"></button>
     </div>

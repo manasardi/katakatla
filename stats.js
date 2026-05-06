@@ -1,11 +1,14 @@
 /* =========================================
    KATAKATLA — STATS PERSONAL
+   + edit username
 ========================================= */
 
 const loadingEl = document.getElementById('stats-loading');
 const contentEl = document.getElementById('stats-content');
 const emptyEl = document.getElementById('stats-empty');
 
+const profileUsernameEl = document.getElementById('profile-username');
+const profileMetaEl = document.getElementById('profile-meta');
 const statPlayedEl = document.getElementById('stat-played');
 const statWinrateEl = document.getElementById('stat-winrate');
 const statScoreEl = document.getElementById('stat-score');
@@ -13,12 +16,28 @@ const statStreakEl = document.getElementById('stat-streak');
 const distributionEl = document.getElementById('distribution-chart');
 const recentDaysEl = document.getElementById('recent-days');
 
+const editBtnEl = document.getElementById('edit-username-btn');
+const editModalEl = document.getElementById('edit-username-modal');
+const editCloseEl = document.getElementById('edit-username-close');
+const editCancelEl = document.getElementById('edit-username-cancel');
+const editSaveEl = document.getElementById('edit-username-save');
+const editInputEl = document.getElementById('edit-username-input');
+const editErrorEl = document.getElementById('edit-username-error');
+
+let currentUser = null;
+let currentUsername = null;
+
 function formatDate(dateStr) {
   const d = new Date(dateStr);
   return d.toLocaleDateString('id-ID', { 
     day: 'numeric', 
     month: 'short' 
   });
+}
+
+function renderProfile(username) {
+  profileUsernameEl.textContent = username || 'pemain anonim';
+  currentUsername = username;
 }
 
 function renderHero(stats) {
@@ -32,7 +51,6 @@ function renderStreak(streak) {
 }
 
 function renderDistribution(distribution) {
-  // Find max value for scaling bars
   const values = Object.values(distribution).map(v => parseInt(v) || 0);
   const maxValue = Math.max(...values, 1);
   
@@ -75,20 +93,37 @@ function renderRecentDays(days) {
   recentDaysEl.innerHTML = html;
 }
 
-async function loadStats() {
-  // Get current user
+async function loadProfileData() {
   const { data: { user } } = await supabaseClient.auth.getUser();
-  if (!user) {
-    console.error('❌ No user session');
+  if (!user) return null;
+  
+  currentUser = user;
+  
+  const { data, error } = await supabaseClient
+    .from('profiles')
+    .select('username, username_changed_at')
+    .eq('id', user.id)
+    .single();
+  
+  if (error) {
+    console.error('❌ Gagal load profile:', error.message);
+    return null;
+  }
+  
+  return data;
+}
+
+async function loadStats() {
+  if (!currentUser) {
     loadingEl.classList.add('hidden');
     emptyEl.classList.remove('hidden');
     return;
   }
   
-  console.log(`📊 Loading stats for user ${user.id.slice(0, 8)}...`);
+  console.log(`📊 Loading stats for user ${currentUser.id.slice(0, 8)}...`);
   
   const { data, error } = await supabaseClient.rpc('get_user_stats', {
-    p_user_id: user.id
+    p_user_id: currentUser.id
   });
   
   if (error) {
@@ -115,5 +150,83 @@ async function loadStats() {
   contentEl.classList.remove('hidden');
 }
 
+// ===== EDIT USERNAME MODAL =====
+function openEditModal() {
+  editInputEl.value = currentUsername || '';
+  editErrorEl.textContent = '';
+  editModalEl.classList.remove('hidden');
+  setTimeout(() => editInputEl.focus(), 100);
+}
+
+function closeEditModal() {
+  editModalEl.classList.add('hidden');
+}
+
+async function saveNewUsername() {
+  const newUsername = editInputEl.value.trim();
+  
+  if (newUsername === currentUsername) {
+    editErrorEl.textContent = 'username belum diubah';
+    return;
+  }
+  
+  // Client-side validation (server-side juga validate)
+  if (newUsername.length < 3 || newUsername.length > 20) {
+    editErrorEl.textContent = 'username harus 3-20 karakter';
+    return;
+  }
+  if (!/^[a-zA-Z0-9_]+$/.test(newUsername)) {
+    editErrorEl.textContent = 'cuma huruf, angka, underscore';
+    return;
+  }
+  
+  editSaveEl.disabled = true;
+  editSaveEl.textContent = 'menyimpan...';
+  editErrorEl.textContent = '';
+  
+  const { data, error } = await supabaseClient.rpc('change_username', {
+    p_new_username: newUsername
+  });
+  
+  editSaveEl.disabled = false;
+  editSaveEl.textContent = 'simpan';
+  
+  if (error) {
+    console.error('❌ RPC error:', error);
+    editErrorEl.textContent = 'error sistem, coba lagi';
+    return;
+  }
+  
+  if (!data.success) {
+    editErrorEl.textContent = data.error || 'gagal simpan';
+    return;
+  }
+  
+  // Success
+  console.log(`✅ Username updated to: ${newUsername}`);
+  renderProfile(newUsername);
+  closeEditModal();
+  
+  // Optional: show toast or feedback
+  alert(`username berhasil diubah jadi ${newUsername}`);
+}
+
+// Setup event listeners
+if (editBtnEl) editBtnEl.addEventListener('click', openEditModal);
+if (editCloseEl) editCloseEl.addEventListener('click', closeEditModal);
+if (editCancelEl) editCancelEl.addEventListener('click', closeEditModal);
+if (editSaveEl) editSaveEl.addEventListener('click', saveNewUsername);
+if (editInputEl) {
+  editInputEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') saveNewUsername();
+  });
+}
+
 // Init
-loadStats();
+(async function init() {
+  const profile = await loadProfileData();
+  if (profile) {
+    renderProfile(profile.username);
+  }
+  await loadStats();
+})();

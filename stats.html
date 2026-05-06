@@ -25,7 +25,19 @@
     <div id="stats-loading" class="lb-loading">memuat stats...</div>
 
     <div id="stats-content" class="hidden">
-      <!-- Hero stats: 3 big numbers -->
+      <!-- User profile section -->
+      <section class="profile-card">
+        <div class="profile-info">
+          <div class="profile-avatar">👤</div>
+          <div class="profile-detail">
+            <div class="profile-name" id="profile-username">–</div>
+            <div class="profile-meta" id="profile-meta">pemain katakatla</div>
+          </div>
+        </div>
+        <button id="edit-username-btn" class="btn-edit" type="button">⚙️ ubah</button>
+      </section>
+
+      <!-- Hero stats -->
       <section class="stats-hero">
         <div class="hero-card">
           <div class="hero-value" id="stat-played">0</div>
@@ -68,6 +80,21 @@
       belum ada data. main dulu yuk!
     </div>
   </main>
+
+  <!-- Modal: Edit Username -->
+  <div id="edit-username-modal" class="modal hidden">
+    <div class="modal-content">
+      <button id="edit-username-close" class="modal-close" type="button" aria-label="tutup">✕</button>
+      <h2>ubah username</h2>
+      <p class="username-hint">username baru akan muncul di leaderboard. <strong>kamu cuma bisa ganti 1x per 7 hari.</strong></p>
+      <input type="text" id="edit-username-input" placeholder="username baru" maxlength="20" autocomplete="off">
+      <p id="edit-username-error" class="username-error"></p>
+      <div class="username-actions">
+        <button id="edit-username-cancel" class="btn-secondary" type="button">batal</button>
+        <button id="edit-username-save" class="modal-button" type="button">simpan</button>
+      </div>
+    </div>
+  </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-client.js"></script>
