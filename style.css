@@ -121,15 +121,26 @@ body {
 .tile.correct, .tile.present, .tile.absent {
   color: white;
   border: none;
-  animation: flip 0.6s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+  animation: flip 0.45s ease-in-out forwards;
 }
 .tile.correct { background: var(--correct); }
 .tile.present { background: var(--present); }
 .tile.absent { background: var(--absent); }
 @keyframes flip {
-  0% { transform: rotateX(0); }
-  50% { transform: rotateX(-90deg); }
-  100% { transform: rotateX(0); }
+  0% {
+    transform: rotateX(0deg);
+    background: var(--surface);
+    color: var(--text);
+    border: 2px solid var(--border-strong);
+  }
+  45% {
+    transform: rotateX(-90deg);
+    background: var(--surface);
+    color: var(--text);
+    border: 2px solid var(--border-strong);
+  }
+  55% { transform: rotateX(-90deg); }
+  100% { transform: rotateX(0deg); }
 }
 .row.shake { animation: shake 0.4s ease; }
 @keyframes shake {

@@ -11,6 +11,16 @@ const USERNAME_ASKED_KEY = 'katakatla_username_asked';
 const HOWTO_SEEN_KEY = 'katakatla_howto_seen';
 let viewingSlot = null;  // null = mode normal, number = mode preview
 
+// ===== TIMEZONE HELPER =====
+function getWIBDate() {
+  // WIB = UTC+7. Kirim date dalam WIB ke server
+  // biar kata yang muncul sesuai hari WIB, bukan UTC
+  const now = new Date();
+  const wibOffset = 7 * 60 * 60 * 1000; // 7 jam dalam ms
+  const wibTime = new Date(now.getTime() + wibOffset);
+  return wibTime.toISOString().split('T')[0]; // format: YYYY-MM-DD
+}
+
 // Daily words: array dari 5 slot
 let dailyWords = [];
 
@@ -23,13 +33,13 @@ function getHistoryKey(date, slot) {
 }
 
 function saveHistory(slot, guesses) {
-  const today = new Date().toISOString().split('T')[0];
+  const today = getWIBDate();
   const key = getHistoryKey(today, slot);
   localStorage.setItem(key, JSON.stringify(guesses));
 }
 
 function loadHistory(slot) {
-  const today = new Date().toISOString().split('T')[0];
+  const today = getWIBDate();
   const key = getHistoryKey(today, slot);
   const data = localStorage.getItem(key);
   return data ? JSON.parse(data) : null;
@@ -114,7 +124,9 @@ function exitPreviewMode() {
 }
 
 async function loadDailyWords() {
-  const { data, error } = await supabaseClient.rpc('get_daily_words');
+  const { data, error } = await supabaseClient.rpc('get_daily_words', {
+  p_date: getWIBDate()
+});
   if (error) {
     console.error('❌ Gagal fetch daily words:', error.message);
     showToast('gagal load kata. coba refresh.');
@@ -165,7 +177,7 @@ async function loadUserProgress() {
   const { data: { user } } = await supabaseClient.auth.getUser();
   if (!user) return [];
   
-  const today = new Date().toISOString().split('T')[0];
+  const today = getWIBDate();
   
   const { data, error } = await supabaseClient
     .from('attempts')
@@ -404,11 +416,15 @@ function colorTiles(guess, targetWord) {
       targetCounts[guess[i]]--;
     }
   }
+  const FLIP_STAGGER = 300;
   for (let i = 0; i < WORD_LENGTH; i++) {
     const tile = getTile(state.currentRow, i);
-    setTimeout(() => tile.classList.add(result[i]), i * 500);
+    setTimeout(() => {
+      tile.classList.remove('filled');
+      tile.classList.add(result[i]);
+    }, i * FLIP_STAGGER);
   }
-  setTimeout(() => updateKeyboardColors(guess, result), WORD_LENGTH * 500);
+  setTimeout(() => updateKeyboardColors(guess, result), WORD_LENGTH * FLIP_STAGGER);
 }
 
 function updateKeyboardColors(guess, result) {
@@ -745,7 +761,7 @@ async function saveAttempt(isSolved) {
     return null;
   }
   
-  const today = new Date().toISOString().split('T')[0];
+  const today = getWIBDate();
   
   const { data, error } = await supabaseClient
     .from('attempts')
