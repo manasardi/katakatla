@@ -602,6 +602,7 @@ function showDayCompleteModal() {
   state.isDayComplete = true;
   modalTitleEl.textContent = '🏆 selesai!';
   modalMessageEl.textContent = `kamu udah main 5 slot hari ini. balik lagi besok untuk kata-kata baru.`;
+  countdownBlockEl.style.display = '';
   modalButtonEl.textContent = 'tutup';
   modalButtonEl.onclick = () => {
     modalEl.classList.add('hidden');
@@ -809,6 +810,16 @@ async function saveAttempt(isSolved) {
   
   console.log(`✅ Slot ${state.currentSlot} saved. Score: ${data.score}`);
   return data;
+}
+
+// ===== MODAL CLOSE X =====
+const modalCloseX = document.getElementById('modal-close-x');
+if (modalCloseX) {
+  modalCloseX.addEventListener('click', () => {
+    modalEl.classList.add('hidden');
+    stopCountdown();
+    countdownBlockEl.style.display = 'none';
+  });
 }
 
 // ===== INIT =====

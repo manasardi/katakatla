@@ -478,8 +478,23 @@ body {
 /* ===== SHARE BUTTON ===== */
 .btn-secondary.hidden { display: none; }
 #modal-share-btn {
-  margin-bottom: 0.5rem;
+  background: var(--surface);
+  color: var(--correct);
+  border: 2px solid var(--correct);
+  padding: 0.85rem 1.5rem;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
   margin-top: 0;
+  margin-bottom: 0.6rem;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+#modal-share-btn:hover {
+  background: var(--correct);
+  color: white;
 }
 
 /* ===== TOPBAR NAV (multi button) ===== */
