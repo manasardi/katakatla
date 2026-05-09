@@ -532,8 +532,8 @@ async function handleShare(isWin, attempt) {
 
 // ===== MODAL: end-of-slot =====
 function showSlotEndModal(isWin, attempt) {
-  stopCountdown();  // ← BARU: pastiin countdown nggak muncul di modal slot end biasa
-  const target = getCurrentTarget();
+  stopCountdown();
+  countdownBlockEl.classList.add('hidden');
   const isLastSlot = state.currentSlot >= TOTAL_SLOTS;
   
   modalTitleEl.textContent = isWin ? '🎉 menang!' : '😢 kalah';
@@ -547,7 +547,6 @@ function showSlotEndModal(isWin, attempt) {
     message = `kata-nya adalah "${target.word}".`;
   }
   
-  message += ` (slot ${state.currentSlot} dari ${TOTAL_SLOTS})`;
   modalMessageEl.textContent = message;
   
   if (isLastSlot) {
@@ -612,17 +611,19 @@ function getNextResetTime() {
 }
 
 function formatCountdown(msUntilReset) {
-  const totalMinutes = Math.floor(msUntilReset / 60000);
-  const hours = Math.floor(totalMinutes / 60);
-  const minutes = totalMinutes % 60;
+  const totalSeconds = Math.floor(msUntilReset / 1000);
+  const hours = Math.floor(totalSeconds / 3600);
+  const minutes = Math.floor((totalSeconds % 3600) / 60);
+  const seconds = totalSeconds % 60;
+  
+  const pad = (n) => String(n).padStart(2, '0');
   
   if (hours > 0) {
-    return `${hours} jam ${minutes} menit`;
+    return `${hours}j ${pad(minutes)}m ${pad(seconds)}d`;
   } else if (minutes > 0) {
-    return `${minutes} menit`;
+    return `${minutes}m ${pad(seconds)}d`;
   } else {
-    const seconds = Math.floor((msUntilReset % 60000) / 1000);
-    return `${seconds} detik`;
+    return `${seconds}d`;
   }
 }
 
@@ -643,7 +644,7 @@ function startCountdown() {
   countdownBlockEl.classList.remove('hidden');
   updateCountdown();
   // Update tiap 30 detik (cukup, nggak perlu real-time per-detik)
-  countdownInterval = setInterval(updateCountdown, 30000);
+  countdownInterval = setInterval(updateCountdown, 1000);
 }
 
 function stopCountdown() {
