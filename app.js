@@ -551,6 +551,7 @@ async function handleShare(isWin, attempt) {
 function showSlotEndModal(isWin, attempt) {
   stopCountdown();
   countdownBlockEl.classList.add('hidden');
+  const target = getCurrentTarget();
   const isLastSlot = state.currentSlot >= TOTAL_SLOTS;
   
   modalTitleEl.textContent = isWin ? '🎉 menang!' : '😢 kalah';
