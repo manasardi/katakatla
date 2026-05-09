@@ -383,7 +383,7 @@ function submitGuess() {
     state.isGameOver = true;
     fireConfetti();
     saveAttempt(true).then((attempt) => {
-      setTimeout(() => showSlotEndModal(true, attempt), 3000);
+      setTimeout(() => showSlotEndModal(true, attempt || { score: 0 }), 3000);
     });
     return;
   }
@@ -1007,6 +1007,14 @@ if (historyCloseEl) historyCloseEl.addEventListener('click', closeHistory);
     state.currentRow = savedGuesses.length;
     renderHistoryToGrid(savedGuesses, target.word);
     console.log(`📜 Resume dari ${savedGuesses.length} tebakan tersimpan`);
+    
+    // Kalau slot ini udah selesai (menang/kalah), state-nya game over
+    const isWin = savedGuesses.includes(target.word);
+    const isMaxGuesses = savedGuesses.length >= MAX_GUESSES;
+    if (isWin || isMaxGuesses) {
+      state.isGameOver = true;
+      setTimeout(() => showSlotEndModal(isWin, { score: 0 }), 500);
+    }
   }
   
   if (nextSlot > 1) {
