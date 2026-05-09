@@ -381,6 +381,7 @@ function submitGuess() {
 
   if (guess === target.word) {
     state.isGameOver = true;
+    fireConfetti();
     saveAttempt(true).then((attempt) => {
       setTimeout(() => showSlotEndModal(true, attempt), 3000);
     });
@@ -456,6 +457,22 @@ function shakeRow() {
   const row = gridEl.querySelector(`[data-row="${state.currentRow}"]`);
   row.classList.add('shake');
   setTimeout(() => row.classList.remove('shake'), 400);
+}
+
+function fireConfetti() {
+  if (typeof confetti !== 'function') return;
+  const isLastSlot = state.currentSlot >= TOTAL_SLOTS;
+  const count = isLastSlot ? 200 : 100;
+  confetti({
+    particleCount: count,
+    spread: isLastSlot ? 100 : 70,
+    origin: { y: 0.6 },
+    colors: ['#22c55e', '#eab308', '#3b82f6', '#ec4899', '#f97316'],
+  });
+  if (isLastSlot) {
+    setTimeout(() => confetti({ particleCount: 100, angle: 60, spread: 55, origin: { x: 0 } }), 250);
+    setTimeout(() => confetti({ particleCount: 100, angle: 120, spread: 55, origin: { x: 1 } }), 400);
+  }
 }
 
 // ===== SHARE =====
