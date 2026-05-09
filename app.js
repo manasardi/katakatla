@@ -551,6 +551,7 @@ async function handleShare(isWin, attempt) {
 function showSlotEndModal(isWin, attempt) {
   stopCountdown();
   countdownBlockEl.classList.add('hidden');
+  countdownBlockEl.style.display = 'none';
   const target = getCurrentTarget();
   const isLastSlot = state.currentSlot >= TOTAL_SLOTS;
   
@@ -660,6 +661,7 @@ function updateCountdown() {
 
 function startCountdown() {
   countdownBlockEl.classList.remove('hidden');
+  countdownBlockEl.style.display = '';
   updateCountdown();
   // Update tiap 30 detik (cukup, nggak perlu real-time per-detik)
   countdownInterval = setInterval(updateCountdown, 1000);
