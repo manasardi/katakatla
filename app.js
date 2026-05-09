@@ -608,9 +608,52 @@ function showDayCompleteModal() {
     modalEl.classList.add('hidden');
     stopCountdown();
   };
-  modalShareBtnEl.classList.add('hidden');
-  startCountdown();  // ← BARU
+  modalShareBtnEl.classList.remove('hidden');
+  modalShareBtnEl.onclick = () => handleDayShare();
+  startCountdown();
   modalEl.classList.remove('hidden');
+}
+
+async function handleDayShare() {
+  const today = new Date().toLocaleDateString('id-ID', {
+    day: 'numeric', month: 'long', year: 'numeric'
+  });
+  
+  let totalScore = 0;
+  let solved = 0;
+  const slotResults = [];
+  
+  for (let s = 1; s <= TOTAL_SLOTS; s++) {
+    const guesses = loadHistory(s);
+    const target = dailyWords.find(w => w.slot === s);
+    if (guesses && target) {
+      const isWin = guesses.includes(target.word);
+      if (isWin) {
+        solved++;
+        slotResults.push(`slot ${s}: ${guesses.indexOf(target.word) + 1}/6 ✅`);
+      } else {
+        slotResults.push(`slot ${s}: gagal ❌`);
+      }
+    }
+  }
+  
+  const text = `katakatla ${today} 🏆\n\n${slotResults.join('\n')}\n\nselesai ${solved}/${TOTAL_SLOTS} slot\n\nmain: katakatla.vercel.app`;
+  
+  if (navigator.share) {
+    try {
+      await navigator.share({ title: 'katakatla', text });
+      return;
+    } catch (err) {
+      if (err.name === 'AbortError') return;
+    }
+  }
+  
+  try {
+    await navigator.clipboard.writeText(text);
+    showToast('hasil disalin ke clipboard');
+  } catch (err) {
+    showToast('gagal share, coba lagi');
+  }
 }
 
 // ===== COUNTDOWN TIMER =====
