@@ -1199,3 +1199,32 @@ body {
   border-radius: 8px;
   line-height: 1.5;
 }
+
+/* ===== MODAL BUTTON (lanjut slot, etc) ===== */
+.modal-button {
+  background: linear-gradient(135deg, var(--correct), #1f5e54);
+  color: white;
+  border: none;
+  padding: 1rem 1.5rem;
+  border-radius: 8px;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  width: 100%;
+  letter-spacing: 0.01em;
+  box-shadow: 0 4px 14px rgba(45, 125, 111, 0.3);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.modal-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(45, 125, 111, 0.4);
+}
+.modal-button:active {
+  transform: translateY(0);
+}
+.modal-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
