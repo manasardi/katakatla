@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>katakatla — admin</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,700;12..96,800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <!-- Password gate -->
+  <div id="auth-gate" class="modal">
+    <div class="modal-content">
+      <h2>🔒 admin access</h2>
+      <p>masukin password buat akses halaman kurasi kata.</p>
+      <input type="password" id="auth-password" class="username-input" placeholder="password" autocomplete="off">
+      <p id="auth-error" class="username-error"></p>
+      <button id="auth-submit" class="modal-button" type="button">masuk</button>
+    </div>
+  </div>
+
+  <!-- Main admin content -->
+  <div id="admin-page" class="lb-page hidden">
+    <a href="index.html" class="back-link">← balik ke game</a>
+    
+    <header class="topbar">
+      <h1 class="logo">admin</h1>
+      <p class="subtitle">kurasi kata kbbi</p>
+    </header>
+
+    <!-- Stats bar -->
+    <div class="admin-stats">
+      <div class="admin-stat">
+        <span class="admin-stat-value" id="stat-total">–</span>
+        <span class="admin-stat-label">total</span>
+      </div>
+      <div class="admin-stat">
+        <span class="admin-stat-value" id="stat-pending">–</span>
+        <span class="admin-stat-label">pending</span>
+      </div>
+      <div class="admin-stat">
+        <span class="admin-stat-value" id="stat-valid">–</span>
+        <span class="admin-stat-label">valid</span>
+      </div>
+      <div class="admin-stat">
+        <span class="admin-stat-value" id="stat-blacklist">–</span>
+        <span class="admin-stat-label">blacklist</span>
+      </div>
+    </div>
+
+    <!-- Main tabs -->
+    <div class="main-tabs">
+      <button class="main-tab active" data-tab="words" type="button">📖 kata</button>
+      <button class="main-tab" data-tab="reports" type="button">🚩 laporan <span id="reports-badge" class="reports-badge hidden">0</span></button>
+    </div>
+
+    <!-- Filter & search (words tab) -->
+    <div id="words-controls" class="admin-controls">
+      <input type="text" id="search-input" class="username-input" placeholder="cari kata..." autocomplete="off">
+      <div class="filter-tabs">
+        <button class="filter-tab active" data-filter="all" type="button">semua</button>
+        <button class="filter-tab" data-filter="pending" type="button">pending</button>
+        <button class="filter-tab" data-filter="valid" type="button">valid</button>
+        <button class="filter-tab" data-filter="blacklist" type="button">blacklist</button>
+      </div>
+    </div>
+
+    <!-- Word list -->
+    <div id="words-loading" class="lb-loading">memuat kata...</div>
+    <div id="words-list" class="words-grid hidden"></div>
+    <div id="words-empty" class="lb-empty hidden">tidak ada kata.</div>
+
+    <!-- Pagination -->
+    <div id="pagination" class="pagination hidden">
+      <button id="prev-page" class="lb-link" type="button">← prev</button>
+      <span id="page-info">halaman 1</span>
+      <button id="next-page" class="lb-link" type="button">next →</button>
+    </div>
+
+    <!-- Reports tab content -->
+    <div id="reports-view" class="hidden">
+      <div id="reports-loading" class="lb-loading">memuat laporan...</div>
+      <div id="reports-list" class="reports-list hidden"></div>
+      <div id="reports-empty" class="lb-empty hidden">belum ada laporan baru. 🎉</div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-client.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

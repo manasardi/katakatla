@@ -268,6 +268,7 @@ const modalTitleEl = document.getElementById('modal-title');
 const modalMessageEl = document.getElementById('modal-message');
 const modalButtonEl = document.getElementById('modal-button');
 const modalShareBtnEl = document.getElementById('modal-share-btn');
+const modalReportBtnEl = document.getElementById('modal-report-btn');
 const usernameModalEl = document.getElementById('username-modal');
 const usernameInputEl = document.getElementById('username-input');
 const usernameErrorEl = document.getElementById('username-error');
@@ -521,6 +522,46 @@ ${scoreText} · ${guessesText}
 main: katakatla.vercel.app`;
 }
 
+async function handleReport(target) {
+  if (!target || !target.word_id) {
+    showToast('error: kata tidak teridentifikasi');
+    return;
+  }
+  
+  const confirmed = confirm(`yakin mau laporin kata "${target.word}"?\n\nlaporan ini bakal direview admin.`);
+  if (!confirmed) return;
+  
+  modalReportBtnEl.disabled = true;
+  modalReportBtnEl.textContent = 'mengirim...';
+  
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) {
+    showToast('session error, refresh aja');
+    modalReportBtnEl.disabled = false;
+    modalReportBtnEl.textContent = '🚩 laporin kata';
+    return;
+  }
+  
+  const { error } = await supabaseClient
+    .from('word_reports')
+    .insert({
+      word_id: target.word_id,
+      word: target.word,
+      reporter_id: user.id,
+    });
+  
+  if (error) {
+    console.error('❌ Report gagal:', error.message);
+    showToast('gagal laporin, coba lagi');
+    modalReportBtnEl.disabled = false;
+    modalReportBtnEl.textContent = '🚩 laporin kata';
+    return;
+  }
+  
+  modalReportBtnEl.textContent = '✓ terlapor, terima kasih';
+  showToast('kata terlapor!');
+}
+
 async function handleShare(isWin, attempt) {
   const text = buildShareText(isWin, attempt);
   
@@ -589,6 +630,12 @@ function showSlotEndModal(isWin, attempt) {
     modalShareBtnEl.classList.add('hidden');
   }
   
+  // Report button
+  modalReportBtnEl.classList.remove('hidden');
+  modalReportBtnEl.disabled = false;
+  modalReportBtnEl.textContent = '🚩 laporin kata';
+  modalReportBtnEl.onclick = () => handleReport(target);
+  
   modalEl.classList.remove('hidden');
 }
 
@@ -610,6 +657,7 @@ function showDayCompleteModal() {
   };
   modalShareBtnEl.classList.remove('hidden');
   modalShareBtnEl.onclick = () => handleDayShare();
+  modalReportBtnEl.classList.add('hidden');
   startCountdown();
   modalEl.classList.remove('hidden');
 }

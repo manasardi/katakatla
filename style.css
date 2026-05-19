@@ -1244,3 +1244,26 @@ body {
   cursor: not-allowed;
   transform: none;
 }
+
+/* ===== REPORT BUTTON ===== */
+.btn-tertiary {
+  background: transparent;
+  color: var(--text-muted);
+  border: none;
+  padding: 0.6rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 500;
+  cursor: pointer;
+  width: 100%;
+  margin-bottom: 0.5rem;
+  transition: color 0.15s ease;
+}
+.btn-tertiary:hover {
+  color: var(--error);
+}
+.btn-tertiary.hidden { display: none; }
+.btn-tertiary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
