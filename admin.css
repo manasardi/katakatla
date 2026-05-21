@@ -294,3 +294,128 @@
   background: var(--bg);
   color: var(--text);
 }
+
+/* ===== CHANGELOG ADMIN ===== */
+.changelog-controls {
+  margin-bottom: 1rem;
+}
+
+.changelog-form {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.changelog-form.hidden { display: none; }
+
+.changelog-form-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.changelog-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.changelog-textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  background: var(--bg);
+  color: var(--text);
+  border: 2px solid var(--border);
+  border-radius: 4px;
+  outline: none;
+  resize: vertical;
+  line-height: 1.5;
+  transition: border-color 0.15s ease;
+}
+
+.changelog-textarea:focus {
+  border-color: var(--border-strong);
+}
+
+.changelog-form-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+  margin-top: 0.5rem;
+}
+
+.changelog-form-actions .btn-secondary,
+.changelog-form-actions .modal-button {
+  width: auto;
+  padding: 0.6rem 1.5rem;
+}
+
+.changelog-admin-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.changelog-admin-list.hidden { display: none; }
+
+.changelog-admin-entry {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.changelog-admin-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.changelog-admin-version {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.changelog-admin-meta {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.changelog-admin-actions {
+  display: flex;
+  gap: 0.35rem;
+}
+
+.changelog-admin-btn {
+  padding: 0.4rem 0.75rem;
+  border-radius: 4px;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-muted);
+  transition: all 0.15s;
+}
+
+.changelog-admin-btn:hover {
+  border-color: var(--error);
+  color: var(--error);
+}

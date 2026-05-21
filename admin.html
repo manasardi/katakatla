@@ -57,6 +57,7 @@
     <div class="main-tabs">
       <button class="main-tab active" data-tab="words" type="button">📖 kata</button>
       <button class="main-tab" data-tab="reports" type="button">🚩 laporan <span id="reports-badge" class="reports-badge hidden">0</span></button>
+      <button class="main-tab" data-tab="changelog" type="button">📝 changelog</button>
     </div>
 
     <!-- Filter & search (words tab) -->
@@ -87,6 +88,49 @@
       <div id="reports-loading" class="lb-loading">memuat laporan...</div>
       <div id="reports-list" class="reports-list hidden"></div>
       <div id="reports-empty" class="lb-empty hidden">belum ada laporan baru. 🎉</div>
+    </div>
+
+    <!-- Changelog tab content -->
+    <div id="changelog-view" class="hidden">
+      <div class="changelog-controls">
+        <button id="add-changelog-btn" class="modal-button" type="button" style="width:auto;padding:0.6rem 1.2rem;">+ tambah versi baru</button>
+      </div>
+
+      <!-- Form (hidden default) -->
+      <div id="changelog-form" class="changelog-form hidden">
+        <h3 class="changelog-form-title">tambah versi baru</h3>
+        
+        <label class="changelog-label">
+          versi (contoh: v1.9)
+          <input type="text" id="cl-version" class="username-input" placeholder="v1.9">
+        </label>
+        
+        <label class="changelog-label">
+          tanggal rilis
+          <input type="date" id="cl-date" class="username-input">
+        </label>
+        
+        <label class="changelog-label">
+          judul
+          <input type="text" id="cl-title" class="username-input" placeholder="contoh: Fitur Baru & Bug Fix">
+        </label>
+        
+        <label class="changelog-label">
+          daftar perubahan (satu baris per item)
+          <textarea id="cl-changes" class="changelog-textarea" rows="8" placeholder="Tombol share lebih jelas&#10;Fix bug timezone&#10;Animasi confetti diperbaiki"></textarea>
+        </label>
+        
+        <p id="cl-error" class="username-error"></p>
+        
+        <div class="changelog-form-actions">
+          <button id="cl-cancel" class="btn-secondary" type="button">batal</button>
+          <button id="cl-submit" class="modal-button" type="button">simpan</button>
+        </div>
+      </div>
+
+      <!-- List existing -->
+      <div id="changelog-loading" class="lb-loading">memuat changelog...</div>
+      <div id="changelog-list" class="changelog-admin-list hidden"></div>
     </div>
   </div>
 

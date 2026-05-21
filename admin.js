@@ -418,3 +418,184 @@ async function handleReportAction(wordId, action) {
     updateStats();
   }
 }
+
+// ===== CHANGELOG ADMIN =====
+const changelogView = document.getElementById('changelog-view');
+const changelogLoading = document.getElementById('changelog-loading');
+const changelogList = document.getElementById('changelog-list');
+const addChangelogBtn = document.getElementById('add-changelog-btn');
+const changelogForm = document.getElementById('changelog-form');
+const clVersion = document.getElementById('cl-version');
+const clDate = document.getElementById('cl-date');
+const clTitle = document.getElementById('cl-title');
+const clChanges = document.getElementById('cl-changes');
+const clError = document.getElementById('cl-error');
+const clCancel = document.getElementById('cl-cancel');
+const clSubmit = document.getElementById('cl-submit');
+
+// Override main tab handler buat handle changelog
+const originalMainTabs = document.querySelectorAll('.main-tab');
+originalMainTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    if (tab.dataset.tab === 'changelog') {
+      wordsControls.classList.add('hidden');
+      wordsList.classList.add('hidden');
+      wordsLoading.classList.add('hidden');
+      wordsEmpty.classList.add('hidden');
+      pagination.classList.add('hidden');
+      reportsView.classList.add('hidden');
+      changelogView.classList.remove('hidden');
+      loadChangelog();
+    } else {
+      changelogView.classList.add('hidden');
+      changelogForm.classList.add('hidden');
+    }
+  });
+});
+
+addChangelogBtn.addEventListener('click', () => {
+  changelogForm.classList.toggle('hidden');
+  if (!changelogForm.classList.contains('hidden')) {
+    // Set default date to today
+    clDate.value = new Date().toISOString().split('T')[0];
+    clVersion.focus();
+  }
+});
+
+clCancel.addEventListener('click', () => {
+  changelogForm.classList.add('hidden');
+  clearChangelogForm();
+});
+
+clSubmit.addEventListener('click', submitChangelog);
+
+function clearChangelogForm() {
+  clVersion.value = '';
+  clDate.value = '';
+  clTitle.value = '';
+  clChanges.value = '';
+  clError.textContent = '';
+}
+
+async function submitChangelog() {
+  const version = clVersion.value.trim();
+  const date = clDate.value;
+  const title = clTitle.value.trim();
+  const changesRaw = clChanges.value.trim();
+  
+  if (!version || !date || !title || !changesRaw) {
+    clError.textContent = 'semua field wajib diisi';
+    return;
+  }
+  
+  if (!/^v\d+\.\d+(\.\d+)?$/.test(version)) {
+    clError.textContent = 'format versi: v1.0, v1.1, v2.0, dst';
+    return;
+  }
+  
+  const changes = changesRaw.split('\n').map(l => l.trim()).filter(l => l);
+  
+  if (changes.length === 0) {
+    clError.textContent = 'minimal 1 perubahan';
+    return;
+  }
+  
+  clSubmit.disabled = true;
+  clSubmit.textContent = 'menyimpan...';
+  
+  const { error } = await supabaseClient
+    .from('changelog')
+    .insert({
+      version,
+      release_date: date,
+      title,
+      changes
+    });
+  
+  clSubmit.disabled = false;
+  clSubmit.textContent = 'simpan';
+  
+  if (error) {
+    if (error.code === '23505') {
+      clError.textContent = `versi ${version} udah ada`;
+    } else {
+      console.error('❌ Submit changelog gagal:', error.message);
+      clError.textContent = 'gagal simpan, cek console';
+    }
+    return;
+  }
+  
+  changelogForm.classList.add('hidden');
+  clearChangelogForm();
+  loadChangelog();
+}
+
+async function loadChangelog() {
+  changelogLoading.classList.remove('hidden');
+  changelogList.classList.add('hidden');
+  
+  const { data, error } = await supabaseClient
+    .from('changelog')
+    .select('*')
+    .order('release_date', { ascending: false })
+    .order('version', { ascending: false });
+  
+  if (error) {
+    console.error('❌ Load changelog gagal:', error.message);
+    changelogLoading.textContent = 'gagal load, cek console';
+    return;
+  }
+  
+  changelogLoading.classList.add('hidden');
+  
+  if (!data || data.length === 0) {
+    changelogList.classList.remove('hidden');
+    changelogList.innerHTML = '<p class="empty-note">belum ada changelog.</p>';
+    return;
+  }
+  
+  changelogList.classList.remove('hidden');
+  changelogList.innerHTML = data.map(entry => {
+    const dateStr = new Date(entry.release_date).toLocaleDateString('id-ID', {
+      day: 'numeric', month: 'short', year: 'numeric'
+    });
+    const changesCount = Array.isArray(entry.changes) ? entry.changes.length : 0;
+    
+    return `
+      <div class="changelog-admin-entry" data-id="${entry.id}">
+        <div class="changelog-admin-info">
+          <span class="changelog-admin-version">${entry.version} — ${entry.title}</span>
+          <span class="changelog-admin-meta">${dateStr} · ${changesCount} perubahan</span>
+        </div>
+        <div class="changelog-admin-actions">
+          <button class="changelog-admin-btn" data-action="delete" data-id="${entry.id}" data-version="${entry.version}" type="button">hapus</button>
+        </div>
+      </div>
+    `;
+  }).join('');
+  
+  changelogList.querySelectorAll('.changelog-admin-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = parseInt(btn.dataset.id);
+      const version = btn.dataset.version;
+      deleteChangelog(id, version);
+    });
+  });
+}
+
+async function deleteChangelog(id, version) {
+  if (!confirm(`yakin hapus changelog ${version}?`)) return;
+  
+  const { error } = await supabaseClient
+    .from('changelog')
+    .delete()
+    .eq('id', id);
+  
+  if (error) {
+    console.error('❌ Delete gagal:', error.message);
+    alert('gagal hapus, cek console');
+    return;
+  }
+  
+  loadChangelog();
+}
