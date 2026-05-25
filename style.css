@@ -20,6 +20,38 @@
   --tile-gap: 6px;
 }
 
+/* Dark mode — auto ikut sistem kalau user belum override */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #16161A;
+    --surface: #232328;
+    --text: #ECEAE5;
+    --text-muted: #9B968E;
+    --border: #35353C;
+    --border-strong: #ECEAE5;
+    --correct: #3DA08F;
+    --present: #E0B43C;
+    --absent: #5A565F;
+    --error: #E26B6B;
+    --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.45);
+  }
+}
+
+/* Dark mode — manual override (user klik toggle) */
+:root[data-theme="dark"] {
+  --bg: #16161A;
+  --surface: #232328;
+  --text: #ECEAE5;
+  --text-muted: #9B968E;
+  --border: #35353C;
+  --border-strong: #ECEAE5;
+  --correct: #3DA08F;
+  --present: #E0B43C;
+  --absent: #5A565F;
+  --error: #E26B6B;
+  --shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.45);
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
@@ -1449,4 +1481,12 @@ body {
 
 .changelog-popup-link:hover {
   color: var(--correct);
+}
+
+.page-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 0.5rem;
 }

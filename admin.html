@@ -26,7 +26,10 @@
 
   <!-- Main admin content -->
   <div id="admin-page" class="lb-page hidden">
-    <a href="index.html" class="back-link">← balik ke game</a>
+    <div class="page-top-bar">
+      <a href="index.html" class="back-link">← balik ke game</a>
+      <button id="theme-toggle" class="lb-link" type="button" aria-label="ganti tema" style="margin-top:0;">🌙</button>
+    </div>
     
     <header class="topbar">
       <h1 class="logo">admin</h1>
@@ -137,5 +140,36 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-client.js"></script>
   <script src="admin.js"></script>
+
+<script>
+    (function() {
+      const THEME_KEY = 'katakatla_theme';
+      function getEffectiveTheme() {
+        const saved = localStorage.getItem(THEME_KEY);
+        if (saved) return saved;
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        const btn = document.getElementById('theme-toggle');
+        if (btn) {
+          btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+          btn.setAttribute('aria-label', theme === 'dark' ? 'mode terang' : 'mode gelap');
+        }
+      }
+      function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme') || getEffectiveTheme();
+        const next = current === 'dark' ? 'light' : 'dark';
+        localStorage.setItem(THEME_KEY, next);
+        applyTheme(next);
+      }
+      applyTheme(getEffectiveTheme());
+      document.addEventListener('DOMContentLoaded', function() {
+        const btn = document.getElementById('theme-toggle');
+        if (btn) btn.addEventListener('click', toggleTheme);
+      });
+    })();
+  </script>
+</body>
 </body>
 </html>

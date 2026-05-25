@@ -10,6 +10,7 @@ const TOTAL_SLOTS = 5;
 const USERNAME_ASKED_KEY = 'katakatla_username_asked';
 const HOWTO_SEEN_KEY = 'katakatla_howto_seen';
 const CHANGELOG_SEEN_KEY = 'katakatla_changelog_seen_version';
+const THEME_KEY = 'katakatla_theme';
 let viewingSlot = null;  // null = mode normal, number = mode preview
 
 // ===== TIMEZONE HELPER =====
@@ -1121,3 +1122,35 @@ if (historyCloseEl) historyCloseEl.addEventListener('click', closeHistory);
     showToast(`lanjut slot ${nextSlot} dari ${TOTAL_SLOTS}`);
   }
 })();
+
+// ===== THEME TOGGLE =====
+const themeToggle = document.getElementById('theme-toggle');
+
+function getEffectiveTheme() {
+  const saved = localStorage.getItem(THEME_KEY);
+  if (saved) return saved;
+  // Belum ada preferensi → ikut sistem
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+}
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  if (themeToggle) {
+    themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
+    themeToggle.setAttribute('aria-label', theme === 'dark' ? 'mode terang' : 'mode gelap');
+  }
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || getEffectiveTheme();
+  const next = current === 'dark' ? 'light' : 'dark';
+  localStorage.setItem(THEME_KEY, next);
+  applyTheme(next);
+}
+
+// Apply theme saat load
+applyTheme(getEffectiveTheme());
+
+if (themeToggle) {
+  themeToggle.addEventListener('click', toggleTheme);
+}
