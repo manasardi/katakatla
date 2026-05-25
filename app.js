@@ -9,6 +9,7 @@ const MAX_GUESSES = 6;
 const TOTAL_SLOTS = 5;
 const USERNAME_ASKED_KEY = 'katakatla_username_asked';
 const HOWTO_SEEN_KEY = 'katakatla_howto_seen';
+const CHANGELOG_SEEN_KEY = 'katakatla_changelog_seen_version';
 let viewingSlot = null;  // null = mode normal, number = mode preview
 
 // ===== TIMEZONE HELPER =====
@@ -941,6 +942,54 @@ if (!localStorage.getItem(HOWTO_SEEN_KEY)) {
   setTimeout(openHowto, 800);
 }
 
+// ===== CHANGELOG POPUP =====
+const changelogModal = document.getElementById('changelog-modal');
+const changelogPopupClose = document.getElementById('changelog-popup-close');
+const changelogPopupOk = document.getElementById('changelog-popup-ok');
+const changelogPopupVersion = document.getElementById('changelog-popup-version');
+const changelogPopupTitle = document.getElementById('changelog-popup-title');
+const changelogPopupChanges = document.getElementById('changelog-popup-changes');
+
+async function checkChangelogPopup() {
+  const { data, error } = await supabaseClient
+    .from('changelog')
+    .select('version, title, changes, release_date')
+    .order('release_date', { ascending: false })
+    .order('version', { ascending: false })
+    .limit(1);
+  
+  if (error || !data || data.length === 0) {
+    if (error) console.error('❌ Gagal cek changelog:', error.message);
+    return;
+  }
+  
+  const latest = data[0];
+  const seenVersion = localStorage.getItem(CHANGELOG_SEEN_KEY);
+  
+  // Kalau belum pernah lihat versi ini, popup
+  if (seenVersion !== latest.version) {
+    showChangelogPopup(latest);
+  }
+}
+
+function showChangelogPopup(entry) {
+  changelogPopupVersion.textContent = entry.version;
+  changelogPopupTitle.textContent = entry.title;
+  
+  const changes = Array.isArray(entry.changes) ? entry.changes : [];
+  changelogPopupChanges.innerHTML = changes.map(c => `<li>${c}</li>`).join('');
+  
+  const dismiss = () => {
+    changelogModal.classList.add('hidden');
+    localStorage.setItem(CHANGELOG_SEEN_KEY, entry.version);
+  };
+  
+  changelogPopupClose.onclick = dismiss;
+  changelogPopupOk.onclick = dismiss;
+  
+  changelogModal.classList.remove('hidden');
+}
+
 // ===== HISTORY MODAL =====
 const historyBtn = document.getElementById('history-btn');
 const historyModal = document.getElementById('history-modal');
@@ -1014,6 +1063,9 @@ if (historyCloseEl) historyCloseEl.addEventListener('click', closeHistory);
   
   // Load streak dan update badge
   loadStreak().then(streak => updateStreakBadge(streak));
+  
+  // Cek changelog popup (sekali per versi)
+  checkChangelogPopup();
   
   let nextSlot = 1;
   for (let s = 1; s <= TOTAL_SLOTS; s++) {

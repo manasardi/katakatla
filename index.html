@@ -130,6 +130,19 @@
     </div>
   </div>
 
+  <!-- Modal: Changelog popup (auto, first-time per version) -->
+  <div id="changelog-modal" class="modal hidden">
+    <div class="modal-content changelog-popup-content">
+      <button id="changelog-popup-close" class="modal-close" type="button" aria-label="tutup">✕</button>
+      <div class="changelog-popup-badge">✨ ada yang baru</div>
+      <h2 id="changelog-popup-version" class="changelog-popup-version"></h2>
+      <h3 id="changelog-popup-title" class="changelog-popup-title"></h3>
+      <ul id="changelog-popup-changes" class="changelog-popup-changes"></ul>
+      <button id="changelog-popup-ok" class="modal-button" type="button">mantap, mengerti!</button>
+      <a href="updates.html" class="changelog-popup-link">lihat semua riwayat update →</a>
+    </div>
+  </div>
+  
   <!-- Modal: Riwayat slot -->
   <div id="history-modal" class="modal hidden">
     <div class="modal-content history-content">
