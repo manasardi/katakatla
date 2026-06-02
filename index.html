@@ -28,6 +28,48 @@
     </div>
   </header>
 
+  <aside id="side-history" class="side-panel side-panel-left">
+    <h3 class="side-title">riwayat hari ini</h3>
+    <div id="side-history-slots" class="side-history-slots"></div>
+  </aside>
+
+  <aside id="side-stats" class="side-panel side-panel-right">
+    <h3 class="side-title">statistik kamu</h3>
+    <div id="side-stats-loading" class="side-stats-loading">memuat...</div>
+    <div id="side-stats-content" class="side-stats-content hidden">
+      <div class="side-stat-row">
+        <span class="side-stat-icon">🔥</span>
+        <div class="side-stat-info">
+          <span class="side-stat-label">streak</span>
+          <span id="side-stat-streak" class="side-stat-value">0</span>
+        </div>
+      </div>
+      <div class="side-stat-row">
+        <span class="side-stat-icon">🎯</span>
+        <div class="side-stat-info">
+          <span class="side-stat-label">win rate</span>
+          <span id="side-stat-winrate" class="side-stat-value">0%</span>
+        </div>
+      </div>
+      <div class="side-stat-row">
+        <span class="side-stat-icon">🎮</span>
+        <div class="side-stat-info">
+          <span class="side-stat-label">total main</span>
+          <span id="side-stat-total" class="side-stat-value">0</span>
+        </div>
+      </div>
+      <div class="side-stat-divider"></div>
+      <div class="side-stat-row">
+        <span class="side-stat-icon">🏆</span>
+        <div class="side-stat-info">
+          <span class="side-stat-label">rank harian</span>
+          <span id="side-stat-rank" class="side-stat-value">–</span>
+        </div>
+      </div>
+    </div>
+    <a href="stats.html" class="side-stats-link">lihat detail →</a>
+  </aside>
+
   <main class="game">
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <div id="grid" class="grid"></div>

@@ -1,6 +1,6 @@
 /* =========================================
    KATAKATLA — GAME LOGIC
-   Phase 4 + 15 + 16 + 17 + persist + howto + history nav
+   Phase 4 + 15 + 16 + 17 + persist + howto + history nav + side panel + esc/backdrop
 ========================================= */
 
 // ===== KONFIGURASI =====
@@ -11,25 +11,20 @@ const USERNAME_ASKED_KEY = 'katakatla_username_asked';
 const HOWTO_SEEN_KEY = 'katakatla_howto_seen';
 const CHANGELOG_SEEN_KEY = 'katakatla_changelog_seen_version';
 const THEME_KEY = 'katakatla_theme';
-let viewingSlot = null;  // null = mode normal, number = mode preview
+let viewingSlot = null;
 
 // ===== TIMEZONE HELPER =====
 function getWIBDate() {
-  // WIB = UTC+7. Kirim date dalam WIB ke server
-  // biar kata yang muncul sesuai hari WIB, bukan UTC
   const now = new Date();
-  const wibOffset = 7 * 60 * 60 * 1000; // 7 jam dalam ms
+  const wibOffset = 7 * 60 * 60 * 1000;
   const wibTime = new Date(now.getTime() + wibOffset);
-  return wibTime.toISOString().split('T')[0]; // format: YYYY-MM-DD
+  return wibTime.toISOString().split('T')[0];
 }
 
-// Daily words: array dari 5 slot
 let dailyWords = [];
-
-// Validation: semua kata valid (Set buat O(1) lookup)
 let validWords = new Set();
 
-// ===== HISTORY HELPERS (localStorage) =====
+// ===== HISTORY HELPERS =====
 function getHistoryKey(date, slot) {
   return `katakatla_history_${date}_slot${slot}`;
 }
@@ -99,8 +94,7 @@ function previewSlot(slotNum) {
   clearGrid();
   renderHistoryToGrid(guesses, target.word);
   viewingSlot = slotNum;
-  
-  state.isGameOver = true;  // disable input saat preview
+  state.isGameOver = true;
   
   showToast(`riwayat slot ${slotNum}`);
 }
@@ -127,8 +121,8 @@ function exitPreviewMode() {
 
 async function loadDailyWords() {
   const { data, error } = await supabaseClient.rpc('get_daily_words', {
-  p_date: getWIBDate()
-});
+    p_date: getWIBDate()
+  });
   if (error) {
     console.error('❌ Gagal fetch daily words:', error.message);
     showToast('gagal load kata. coba refresh.');
@@ -387,7 +381,9 @@ function submitGuess() {
     fireConfetti();
     saveAttempt(true).then((attempt) => {
       setTimeout(() => showSlotEndModal(true, attempt || { score: 0 }), 3000);
+      loadSideStats();
     });
+    renderSideHistory();
     return;
   }
 
@@ -398,8 +394,11 @@ function submitGuess() {
     state.isGameOver = true;
     saveAttempt(false).then(() => {
       setTimeout(() => showSlotEndModal(false, null), 3000);
+      loadSideStats();
     });
   }
+  
+  renderSideHistory();
 }
 
 function colorTiles(guess, targetWord) {
@@ -632,7 +631,6 @@ function showSlotEndModal(isWin, attempt) {
     modalShareBtnEl.classList.add('hidden');
   }
   
-  // Report button
   modalReportBtnEl.classList.remove('hidden');
   modalReportBtnEl.disabled = false;
   modalReportBtnEl.textContent = '🚩 laporin kata';
@@ -644,6 +642,7 @@ function showSlotEndModal(isWin, attempt) {
 function goToNextSlot() {
   state.currentSlot++;
   resetForNextSlot();
+  renderSideHistory();
   console.log(`▶ Lanjut slot ${state.currentSlot}`);
 }
 
@@ -662,6 +661,7 @@ function showDayCompleteModal() {
   modalReportBtnEl.classList.add('hidden');
   startCountdown();
   modalEl.classList.remove('hidden');
+  renderSideHistory();
 }
 
 async function handleDayShare() {
@@ -712,11 +712,9 @@ const countdownBlockEl = document.getElementById('countdown-block');
 const countdownTimeEl = document.getElementById('countdown-time');
 
 function getNextResetTime() {
-  // Reset = UTC 00:00 = WIB 07:00
   const now = new Date();
   const next = new Date(now);
   next.setUTCHours(0, 0, 0, 0);
-  // Kalau sekarang udah lewat UTC midnight hari ini, set ke besok
   if (next <= now) {
     next.setUTCDate(next.getUTCDate() + 1);
   }
@@ -757,7 +755,6 @@ function startCountdown() {
   countdownBlockEl.classList.remove('hidden');
   countdownBlockEl.style.display = '';
   updateCountdown();
-  // Update tiap 30 detik (cukup, nggak perlu real-time per-detik)
   countdownInterval = setInterval(updateCountdown, 1000);
 }
 
@@ -846,13 +843,12 @@ async function updateUsername(newUsername) {
   return { success: true };
 }
 
-// ===== PHYSICAL KEYBOARD =====
+// ===== PHYSICAL KEYBOARD (game input only) =====
 document.addEventListener('keydown', (e) => {
   if (!usernameModalEl.classList.contains('hidden')) {
     if (e.key === 'Enter') usernameSetBtnEl.click();
     return;
   }
-  // Esc keluar dari preview mode
   if (e.key === 'Escape' && viewingSlot !== null) {
     exitPreviewMode();
     return;
@@ -915,7 +911,7 @@ if (modalCloseX) {
   });
 }
 
-// ===== INIT =====
+// ===== INIT BUILD =====
 buildGrid();
 buildKeyboard();
 
@@ -938,7 +934,6 @@ if (howtoBtn) howtoBtn.addEventListener('click', openHowto);
 if (howtoCloseEl) howtoCloseEl.addEventListener('click', closeHowto);
 if (howtoOkEl) howtoOkEl.addEventListener('click', closeHowto);
 
-// Auto-show untuk first-time visitor
 if (!localStorage.getItem(HOWTO_SEEN_KEY)) {
   setTimeout(openHowto, 800);
 }
@@ -967,7 +962,6 @@ async function checkChangelogPopup() {
   const latest = data[0];
   const seenVersion = localStorage.getItem(CHANGELOG_SEEN_KEY);
   
-  // Kalau belum pernah lihat versi ini, popup
   if (seenVersion !== latest.version) {
     showChangelogPopup(latest);
   }
@@ -1047,6 +1041,127 @@ function closeHistory() {
 if (historyBtn) historyBtn.addEventListener('click', openHistory);
 if (historyCloseEl) historyCloseEl.addEventListener('click', closeHistory);
 
+// ===== SIDE PANEL: RIWAYAT SLOT LIVE =====
+const sideHistorySlotsEl = document.getElementById('side-history-slots');
+
+function renderSideHistory() {
+  if (!sideHistorySlotsEl) return;
+  
+  sideHistorySlotsEl.innerHTML = '';
+  
+  for (let s = 1; s <= TOTAL_SLOTS; s++) {
+    const guesses = loadHistory(s);
+    const target = dailyWords.find(w => w.slot === s);
+    const hasHistory = guesses && guesses.length > 0;
+    
+    const isCurrent = s === state.currentSlot && !state.isDayComplete;
+    const isWon = hasHistory && target && guesses.includes(target.word);
+    const isLost = hasHistory && !isWon && guesses.length >= MAX_GUESSES;
+    const isInProgress = hasHistory && !isWon && !isLost;
+    
+    let statusText, statusIcon, cardClass;
+    if (isWon) {
+      statusText = `${guesses.length}/6`;
+      statusIcon = '✓';
+      cardClass = 'is-won';
+    } else if (isLost) {
+      statusText = 'gagal';
+      statusIcon = '✗';
+      cardClass = 'is-lost';
+    } else if (isInProgress) {
+      statusText = `${guesses.length}/6`;
+      statusIcon = '⏳';
+      cardClass = isCurrent ? 'is-current' : '';
+    } else if (isCurrent) {
+      statusText = 'sekarang';
+      statusIcon = '▸';
+      cardClass = 'is-current';
+    } else {
+      statusText = 'belum';
+      statusIcon = '–';
+      cardClass = '';
+    }
+    
+    const btn = document.createElement('button');
+    btn.className = `side-slot-card ${cardClass}`;
+    btn.type = 'button';
+    if (!hasHistory) btn.disabled = true;
+    
+    btn.innerHTML = `
+      <span class="side-slot-num">${s}</span>
+      <span class="side-slot-label">slot ${s}</span>
+      <span class="side-slot-status">${statusIcon} ${statusText}</span>
+    `;
+    
+    btn.addEventListener('click', () => {
+      if (!hasHistory) return;
+      previewSlot(s);
+    });
+    
+    sideHistorySlotsEl.appendChild(btn);
+  }
+}
+
+// ===== SIDE PANEL: MINI STATS =====
+const sideStatsLoadingEl = document.getElementById('side-stats-loading');
+const sideStatsContentEl = document.getElementById('side-stats-content');
+const sideStatStreakEl = document.getElementById('side-stat-streak');
+const sideStatWinrateEl = document.getElementById('side-stat-winrate');
+const sideStatTotalEl = document.getElementById('side-stat-total');
+const sideStatRankEl = document.getElementById('side-stat-rank');
+
+async function loadSideStats() {
+  if (!sideStatsContentEl) return;
+  
+  const { data: { user } } = await supabaseClient.auth.getUser();
+  if (!user) return;
+  
+  const { data: stats, error: statsError } = await supabaseClient.rpc('get_user_stats', {
+    p_user_id: user.id
+  });
+  
+  if (statsError) {
+    console.error('❌ Gagal load side stats:', statsError.message);
+    sideStatsLoadingEl.textContent = 'gagal load';
+    return;
+  }
+  
+  const streak = (stats && stats.streak) ? stats.streak : 0;
+  const totalPlayed = (stats && stats.total_played) ? stats.total_played : 0;
+  const totalWins = (stats && stats.total_wins) ? stats.total_wins : 0;
+  const winRate = totalPlayed > 0 ? Math.round((totalWins / totalPlayed) * 100) : 0;
+  
+  sideStatStreakEl.textContent = streak;
+  sideStatWinrateEl.textContent = `${winRate}%`;
+  sideStatTotalEl.textContent = totalPlayed;
+  
+  const today = getWIBDate();
+  const { data: rankData, error: rankError } = await supabaseClient
+    .from('attempts')
+    .select('user_id, score')
+    .eq('play_date', today);
+  
+  if (!rankError && rankData) {
+    const userScores = {};
+    rankData.forEach(a => {
+      userScores[a.user_id] = (userScores[a.user_id] || 0) + a.score;
+    });
+    
+    const sorted = Object.entries(userScores).sort((a, b) => b[1] - a[1]);
+    const myRank = sorted.findIndex(([uid]) => uid === user.id) + 1;
+    
+    if (myRank > 0) {
+      sideStatRankEl.textContent = `#${myRank}`;
+    } else {
+      sideStatRankEl.textContent = '–';
+    }
+  }
+  
+  sideStatsLoadingEl.classList.add('hidden');
+  sideStatsContentEl.classList.remove('hidden');
+}
+
+// ===== INIT MAIN =====
 (async function init() {
   const [wordsLoaded, validLoaded] = await Promise.all([
     loadDailyWords(),
@@ -1062,10 +1177,8 @@ if (historyCloseEl) historyCloseEl.addEventListener('click', closeHistory);
   
   const completedSlots = await loadUserProgress();
   
-  // Load streak dan update badge
   loadStreak().then(streak => updateStreakBadge(streak));
-  
-  // Cek changelog popup (sekali per versi)
+  loadSideStats();
   checkChangelogPopup();
   
   let nextSlot = 1;
@@ -1080,7 +1193,6 @@ if (historyCloseEl) historyCloseEl.addEventListener('click', closeHistory);
   if (nextSlot > TOTAL_SLOTS) {
     state.isDayComplete = true;
     
-    // Render history slot 5 (terakhir) ke grid
     const lastSlot = TOTAL_SLOTS;
     const lastGuesses = loadHistory(lastSlot);
     const lastTarget = dailyWords.find(w => w.slot === lastSlot);
@@ -1094,13 +1206,13 @@ if (historyCloseEl) historyCloseEl.addEventListener('click', closeHistory);
     }
     
     showDayCompleteModal();
+    renderSideHistory();
     return;
   }
   
   state.currentSlot = nextSlot;
   console.log(`▶ Mulai dari slot ${nextSlot}`);
   
-  // Load history slot ini kalau ada (resume di tengah)
   const savedGuesses = loadHistory(nextSlot);
   if (savedGuesses && savedGuesses.length > 0) {
     const target = getCurrentTarget();
@@ -1109,7 +1221,6 @@ if (historyCloseEl) historyCloseEl.addEventListener('click', closeHistory);
     renderHistoryToGrid(savedGuesses, target.word);
     console.log(`📜 Resume dari ${savedGuesses.length} tebakan tersimpan`);
     
-    // Kalau slot ini udah selesai (menang/kalah), state-nya game over
     const isWin = savedGuesses.includes(target.word);
     const isMaxGuesses = savedGuesses.length >= MAX_GUESSES;
     if (isWin || isMaxGuesses) {
@@ -1121,6 +1232,8 @@ if (historyCloseEl) historyCloseEl.addEventListener('click', closeHistory);
   if (nextSlot > 1) {
     showToast(`lanjut slot ${nextSlot} dari ${TOTAL_SLOTS}`);
   }
+  
+  renderSideHistory();
 })();
 
 // ===== THEME TOGGLE =====
@@ -1129,7 +1242,6 @@ const themeToggle = document.getElementById('theme-toggle');
 function getEffectiveTheme() {
   const saved = localStorage.getItem(THEME_KEY);
   if (saved) return saved;
-  // Belum ada preferensi → ikut sistem
   return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 }
 
@@ -1148,9 +1260,53 @@ function toggleTheme() {
   applyTheme(next);
 }
 
-// Apply theme saat load
 applyTheme(getEffectiveTheme());
 
 if (themeToggle) {
   themeToggle.addEventListener('click', toggleTheme);
 }
+
+// ===== ESC + BACKDROP CLOSE MODAL =====
+// Sengaja di paling bawah biar semua variabel modal udah ke-declare
+document.addEventListener('keydown', (e) => {
+  if (e.key !== 'Escape') return;
+  
+  if (!usernameModalEl.classList.contains('hidden')) return;
+  if (viewingSlot !== null) return;
+  
+  if (howtoModal && !howtoModal.classList.contains('hidden')) {
+    closeHowto();
+    return;
+  }
+  if (historyModal && !historyModal.classList.contains('hidden')) {
+    closeHistory();
+    return;
+  }
+  if (changelogModal && !changelogModal.classList.contains('hidden')) {
+    changelogPopupClose.click();
+    return;
+  }
+  if (!modalEl.classList.contains('hidden')) {
+    modalEl.classList.add('hidden');
+    stopCountdown();
+    countdownBlockEl.style.display = 'none';
+  }
+});
+
+function setupBackdropClose(modalElement, closeFunction) {
+  if (!modalElement) return;
+  modalElement.addEventListener('click', (e) => {
+    if (e.target === modalElement) {
+      closeFunction();
+    }
+  });
+}
+
+setupBackdropClose(howtoModal, closeHowto);
+setupBackdropClose(historyModal, closeHistory);
+setupBackdropClose(changelogModal, () => changelogPopupClose.click());
+setupBackdropClose(modalEl, () => {
+  modalEl.classList.add('hidden');
+  stopCountdown();
+  countdownBlockEl.style.display = 'none';
+});
