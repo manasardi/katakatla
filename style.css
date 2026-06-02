@@ -1678,3 +1678,135 @@ body {
     color: var(--correct);
   }
 }
+
+/* ===== LEADERBOARD POLISH ===== */
+
+/* Sticky header */
+.lb-table thead {
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 10;
+}
+
+.lb-table thead th {
+  background: var(--bg);
+  border-bottom: 2px solid var(--border);
+}
+
+/* Avatar bubble */
+.name-cell {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.avatar-bubble {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: white;
+  flex-shrink: 0;
+}
+
+.name-text {
+  font-weight: 600;
+}
+
+.me-badge {
+  background: var(--correct);
+  color: white;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 999px;
+  letter-spacing: 0.04em;
+}
+
+/* My rank section (kalau user nggak top 50) */
+.lb-my-rank {
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 2px dashed var(--border);
+}
+
+.lb-my-rank.hidden { display: none; }
+
+.lb-my-rank-label {
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.lb-my-rank-table {
+  margin-top: 0;
+}
+
+.lb-my-rank-table tr.is-me {
+  background: rgba(45, 125, 111, 0.1);
+}
+
+/* ===== LEADERBOARD ARCHIVE NAVIGATION ===== */
+.lb-nav {
+  display: grid;
+  grid-template-columns: 36px 1fr 36px;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem 0 0.5rem;
+}
+
+.lb-nav .lb-info {
+  margin: 0;
+  text-align: center;
+}
+
+.lb-nav-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+  line-height: 1;
+}
+
+.lb-nav-btn:hover:not(:disabled) {
+  border-color: var(--text);
+  background: var(--bg);
+}
+
+.lb-nav-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.lb-info {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.lb-info .lb-info-current {
+  color: var(--correct);
+  font-weight: 700;
+}

@@ -29,9 +29,14 @@
       <button class="lb-tab active" data-period="daily">harian</button>
       <button class="lb-tab" data-period="weekly">mingguan</button>
       <button class="lb-tab" data-period="monthly">bulanan</button>
+      <button class="lb-tab" data-period="yearly">tahunan</button>
     </div>
 
-    <div id="lb-info" class="lb-info"></div>
+    <div class="lb-nav">
+      <button id="lb-nav-prev" class="lb-nav-btn" type="button" aria-label="periode sebelumnya">‹</button>
+      <div id="lb-info" class="lb-info"></div>
+      <button id="lb-nav-next" class="lb-nav-btn" type="button" aria-label="periode berikutnya">›</button>
+    </div>
 
     <div id="lb-loading" class="lb-loading">memuat...</div>
 
@@ -48,6 +53,13 @@
     </table>
 
     <div id="lb-empty" class="lb-empty hidden">belum ada pemain. jadilah yang pertama!</div>
+    
+    <div id="lb-my-rank" class="lb-my-rank hidden">
+      <div class="lb-my-rank-label">posisi kamu</div>
+      <table class="lb-table lb-my-rank-table">
+        <tbody id="lb-my-rank-tbody"></tbody>
+      </table>
+    </div>
   </main>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -94,6 +106,5 @@
       });
     })();
   </script>
-</body>
 </body>
 </html>
