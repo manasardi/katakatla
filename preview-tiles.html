@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>preview tiles</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=Instrument+Serif&display=swap" rel="stylesheet">
+  <style>
+    body { 
+      font-family: 'Inter', sans-serif; 
+      background: #FAF7F2; 
+      padding: 2rem; 
+      max-width: 700px; 
+      margin: 0 auto; 
+    }
+    h2 { font-family: 'Bricolage Grotesque'; margin: 2rem 0 1rem; font-size: 1.2rem; }
+    .row { display: flex; gap: 6px; margin-bottom: 0.5rem; }
+    .label { color: #666; font-size: 0.85rem; margin-bottom: 1.5rem; }
+    
+    /* ============ OPSI A: SOFT EMBOSSED ============ */
+    .a-tile {
+      width: 60px; height: 60px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Bricolage Grotesque'; font-weight: 800; font-size: 1.5rem;
+      text-transform: uppercase;
+      background: #fff;
+      border-radius: 14px;
+      box-shadow: 
+        inset 0 -3px 0 rgba(0,0,0,0.08),
+        0 2px 6px rgba(0,0,0,0.05);
+      color: #1a1a1a;
+    }
+    .a-tile.filled { 
+      background: #f4f1ec; 
+      box-shadow: 
+        inset 0 -3px 0 rgba(0,0,0,0.12),
+        0 1px 3px rgba(0,0,0,0.08);
+    }
+    .a-tile.correct { 
+      background: #2D7D6F; 
+      color: white; 
+      box-shadow: 
+        inset 0 -4px 0 rgba(0,0,0,0.2),
+        0 4px 12px rgba(45,125,111,0.3);
+    }
+    .a-tile.present { 
+      background: #E5B935; 
+      color: white;
+      box-shadow: 
+        inset 0 -4px 0 rgba(0,0,0,0.2),
+        0 4px 12px rgba(229,185,53,0.3);
+    }
+    .a-tile.absent { 
+      background: #888; 
+      color: white;
+      box-shadow: inset 0 -3px 0 rgba(0,0,0,0.2);
+    }
+    
+    /* ============ OPSI B: GLASS / FROSTED ============ */
+    .b-bg {
+      background: linear-gradient(135deg, #FFF8EE 0%, #F0E8D9 100%);
+      padding: 1.5rem;
+      border-radius: 16px;
+    }
+    .b-tile {
+      width: 60px; height: 60px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Space Grotesk'; font-weight: 700; font-size: 1.5rem;
+      text-transform: uppercase;
+      background: rgba(255,255,255,0.6);
+      border: 1px solid rgba(0,0,0,0.06);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      color: #2a2a2a;
+    }
+    .b-tile.filled { 
+      background: rgba(255,255,255,0.9); 
+      border-color: rgba(0,0,0,0.15);
+    }
+    .b-tile.correct { 
+      background: linear-gradient(135deg, #3DA08F, #2A6B5E);
+      color: white; border: none;
+    }
+    .b-tile.present { 
+      background: linear-gradient(135deg, #F0C04C, #C99821);
+      color: white; border: none;
+    }
+    .b-tile.absent { 
+      background: rgba(100,100,100,0.5);
+      color: white; border: none;
+    }
+    
+    /* ============ OPSI C: NEWSPAPER / EDITORIAL ============ */
+    .c-bg {
+      background: #F5F0E6;
+      padding: 1.5rem;
+      border-radius: 0;
+      border-top: 3px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    .c-tile {
+      width: 60px; height: 60px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 2rem;
+      text-transform: uppercase;
+      background: transparent;
+      border: 2px solid #1a1a1a;
+      border-radius: 0;
+      color: #1a1a1a;
+    }
+    .c-tile.filled { 
+      background: #1a1a1a;
+      color: #F5F0E6;
+    }
+    .c-tile.correct { 
+      background: #1F5F4F; 
+      color: #F5F0E6;
+      border-color: #1F5F4F;
+    }
+    .c-tile.present { 
+      background: #B8902C; 
+      color: #F5F0E6;
+      border-color: #B8902C;
+    }
+    .c-tile.absent { 
+      background: #666;
+      color: #F5F0E6;
+      border-color: #666;
+    }
+  </style>
+</head>
+<body>
+  <h1 style="font-family: 'Bricolage Grotesque'; font-size: 2rem;">preview 3 opsi tile</h1>
+  <p>main 1 baris kata "BUKU·T", lihat mana yang paling lo suka.</p>
+
+  <h2>OPSI A — Soft Embossed (tactile, "tombol fisik")</h2>
+  <p class="label">Inspirasi: physical keycap, claymorphism. Hangat, cozy, satisfying buat di-tap.</p>
+  <div class="row">
+    <div class="a-tile correct">B</div>
+    <div class="a-tile filled">U</div>
+    <div class="a-tile present">K</div>
+    <div class="a-tile filled">U</div>
+    <div class="a-tile absent">T</div>
+  </div>
+
+  <h2>OPSI B — Glass / Frosted (modern, premium)</h2>
+  <p class="label">Inspirasi: iOS glass material, Apple Music. Modern, lightweight, premium feel.</p>
+  <div class="b-bg">
+    <div class="row">
+      <div class="b-tile correct">B</div>
+      <div class="b-tile filled">U</div>
+      <div class="b-tile present">K</div>
+      <div class="b-tile filled">U</div>
+      <div class="b-tile absent">T</div>
+    </div>
+  </div>
+
+  <h2>OPSI C — Editorial / Newspaper (distinctive, anti-AI)</h2>
+  <p class="label">Inspirasi: Are.na, The Browser Company, koran lawas. Serif font, sharp edges, high contrast. Paling distinctive — nggak ada game tebak kata yang pakai vibe ini.</p>
+  <div class="c-bg">
+    <div class="row">
+      <div class="c-tile correct">B</div>
+      <div class="c-tile filled">U</div>
+      <div class="c-tile present">K</div>
+      <div class="c-tile filled">U</div>
+      <div class="c-tile absent">T</div>
+    </div>
+  </div>
+</body>
+</html>
