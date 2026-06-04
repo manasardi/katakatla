@@ -2,170 +2,230 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <title>preview tiles</title>
+  <title>preview opsi 2 — earthy v3</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,700;12..96,800&family=Inter:wght@400;500;600;700;800&family=Space+Grotesk:wght@500;700&family=Instrument+Serif&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
+    :root {
+      --bg: #F5EFE0;
+      --surface: #FAF6EB;
+      --text: #1B2A41;
+      --text-muted: #6B7280;
+      --border: #E5DBC4;
+      --correct: #7A8C3A;
+      --correct-light: #94A847;
+      --correct-dark: #5C6B2A;
+      --present: #D17B3F;
+      --present-light: #E08F52;
+      --present-dark: #A85F2C;
+      --absent: #9C8B7A;
+      --shadow-tile: 0 4px 12px rgba(27, 42, 65, 0.08);
+    }
+    
     body { 
       font-family: 'Inter', sans-serif; 
-      background: #FAF7F2; 
-      padding: 2rem; 
-      max-width: 700px; 
+      background: linear-gradient(180deg, #EFE7D2 0%, #FAF6EB 50%, #EFE7D2 100%);
+      padding: 2rem 1.5rem; 
+      max-width: 760px; 
       margin: 0 auto; 
-    }
-    h2 { font-family: 'Bricolage Grotesque'; margin: 2rem 0 1rem; font-size: 1.2rem; }
-    .row { display: flex; gap: 6px; margin-bottom: 0.5rem; }
-    .label { color: #666; font-size: 0.85rem; margin-bottom: 1.5rem; }
-    
-    /* ============ OPSI A: SOFT EMBOSSED ============ */
-    .a-tile {
-      width: 60px; height: 60px;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Bricolage Grotesque'; font-weight: 800; font-size: 1.5rem;
-      text-transform: uppercase;
-      background: #fff;
-      border-radius: 14px;
-      box-shadow: 
-        inset 0 -3px 0 rgba(0,0,0,0.08),
-        0 2px 6px rgba(0,0,0,0.05);
-      color: #1a1a1a;
-    }
-    .a-tile.filled { 
-      background: #f4f1ec; 
-      box-shadow: 
-        inset 0 -3px 0 rgba(0,0,0,0.12),
-        0 1px 3px rgba(0,0,0,0.08);
-    }
-    .a-tile.correct { 
-      background: #2D7D6F; 
-      color: white; 
-      box-shadow: 
-        inset 0 -4px 0 rgba(0,0,0,0.2),
-        0 4px 12px rgba(45,125,111,0.3);
-    }
-    .a-tile.present { 
-      background: #E5B935; 
-      color: white;
-      box-shadow: 
-        inset 0 -4px 0 rgba(0,0,0,0.2),
-        0 4px 12px rgba(229,185,53,0.3);
-    }
-    .a-tile.absent { 
-      background: #888; 
-      color: white;
-      box-shadow: inset 0 -3px 0 rgba(0,0,0,0.2);
+      color: var(--text);
+      min-height: 100vh;
     }
     
-    /* ============ OPSI B: GLASS / FROSTED ============ */
-    .b-bg {
-      background: linear-gradient(135deg, #FFF8EE 0%, #F0E8D9 100%);
-      padding: 1.5rem;
-      border-radius: 16px;
+    /* LOGO — navy gradient (subtle, 2 shade navy) */
+    .logo {
+      font-family: 'Bebas Neue';
+      font-size: 3.5rem;
+      letter-spacing: 0.01em;
+      text-align: center;
+      margin-bottom: 0.25rem;
+      line-height: 1;
+      background: linear-gradient(135deg, #0F1A2E 0%, #1B2A41 50%, #2D3E5A 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
     }
-    .b-tile {
+    
+    .subtitle {
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-bottom: 2.5rem;
+      font-weight: 500;
+    }
+    
+    h2 { 
+      font-family: 'Bebas Neue'; 
+      margin: 2rem 0 0.5rem; 
+      font-size: 1.3rem; 
+      letter-spacing: 0.02em;
+      text-transform: uppercase;
+    }
+    
+    .label { 
+      color: var(--text-muted); 
+      font-size: 0.85rem; 
+      margin-bottom: 1rem; 
+      line-height: 1.5;
+    }
+    
+    /* TILE */
+    .row { display: flex; gap: 6px; margin-bottom: 0.75rem; }
+    
+    .tile {
       width: 60px; height: 60px;
       display: flex; align-items: center; justify-content: center;
-      font-family: 'Space Grotesk'; font-weight: 700; font-size: 1.5rem;
+      font-family: 'Inter'; font-weight: 800; font-size: 1.5rem;
       text-transform: uppercase;
-      background: rgba(255,255,255,0.6);
-      border: 1px solid rgba(0,0,0,0.06);
+      background: rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(27, 42, 65, 0.08);
       backdrop-filter: blur(10px);
       border-radius: 10px;
-      color: #2a2a2a;
+      color: var(--text);
     }
-    .b-tile.filled { 
-      background: rgba(255,255,255,0.9); 
-      border-color: rgba(0,0,0,0.15);
+    .tile.filled { 
+      background: rgba(255, 255, 255, 0.9);
+      border-color: rgba(27, 42, 65, 0.15);
     }
-    .b-tile.correct { 
-      background: linear-gradient(135deg, #3DA08F, #2A6B5E);
+    .tile.correct { 
+      background: linear-gradient(135deg, var(--correct-light), var(--correct-dark));
       color: white; border: none;
+      box-shadow: var(--shadow-tile);
     }
-    .b-tile.present { 
-      background: linear-gradient(135deg, #F0C04C, #C99821);
+    .tile.present { 
+      background: linear-gradient(135deg, var(--present-light), var(--present-dark));
       color: white; border: none;
+      box-shadow: var(--shadow-tile);
     }
-    .b-tile.absent { 
-      background: rgba(100,100,100,0.5);
+    .tile.absent { 
+      background: var(--absent);
       color: white; border: none;
     }
     
-    /* ============ OPSI C: NEWSPAPER / EDITORIAL ============ */
-    .c-bg {
-      background: #F5F0E6;
-      padding: 1.5rem;
-      border-radius: 0;
-      border-top: 3px solid #1a1a1a;
-      border-bottom: 1px solid #1a1a1a;
+    .btn-primary {
+      background: linear-gradient(135deg, var(--correct-light), var(--correct-dark));
+      color: white;
+      border: none;
+      padding: 1rem 1.5rem;
+      border-radius: 10px;
+      font-family: 'Inter';
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(122, 140, 58, 0.3);
+      margin-top: 0.5rem;
     }
-    .c-tile {
-      width: 60px; height: 60px;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Instrument Serif', serif; font-weight: 400; font-size: 2rem;
-      text-transform: uppercase;
-      background: transparent;
-      border: 2px solid #1a1a1a;
-      border-radius: 0;
-      color: #1a1a1a;
+    
+    /* PILL — gradient burnt orange default, olive hover */
+    .btn-pill {
+      display: inline-block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: white;
+      padding: 0.4rem 0.9rem;
+      border: none;
+      border-radius: 999px;
+      background: linear-gradient(135deg, var(--present-light), var(--present-dark));
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(209, 123, 63, 0.25);
+      transition: all 0.2s ease;
     }
-    .c-tile.filled { 
-      background: #1a1a1a;
-      color: #F5F0E6;
+    
+    .btn-pill:hover {
+      background: linear-gradient(135deg, var(--correct-light), var(--correct-dark));
+      box-shadow: 0 4px 12px rgba(122, 140, 58, 0.35);
+      transform: translateY(-1px);
     }
-    .c-tile.correct { 
-      background: #1F5F4F; 
-      color: #F5F0E6;
-      border-color: #1F5F4F;
+    
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-top: 1rem;
+      box-shadow: 0 2px 8px rgba(27, 42, 65, 0.04);
     }
-    .c-tile.present { 
-      background: #B8902C; 
-      color: #F5F0E6;
-      border-color: #B8902C;
+    
+    .stat-value {
+      font-family: 'Bebas Neue';
+      font-size: 2.5rem;
+      letter-spacing: 0.02em;
+      line-height: 1;
+      color: var(--text);
     }
-    .c-tile.absent { 
-      background: #666;
-      color: #F5F0E6;
-      border-color: #666;
+    
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: lowercase;
+      letter-spacing: 0.04em;
+      margin-top: 0.5rem;
+    }
+    
+    .palette-strip {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+      margin: 1rem 0;
+    }
+    .swatch {
+      width: 80px;
+      padding: 0.75rem 0.5rem;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 0.7rem;
+      font-weight: 600;
     }
   </style>
 </head>
 <body>
-  <h1 style="font-family: 'Bricolage Grotesque'; font-size: 2rem;">preview 3 opsi tile</h1>
-  <p>main 1 baris kata "BUKU·T", lihat mana yang paling lo suka.</p>
+  <h1 class="logo">KATAKATLA</h1>
+  <p class="subtitle">opsi 2: cream + earthy + pop · preview v3</p>
 
-  <h2>OPSI A — Soft Embossed (tactile, "tombol fisik")</h2>
-  <p class="label">Inspirasi: physical keycap, claymorphism. Hangat, cozy, satisfying buat di-tap.</p>
+  <h2>palette swatches</h2>
+  <div class="palette-strip">
+    <div class="swatch" style="background:#F5EFE0; color:#1B2A41;">bg<br>#F5EFE0</div>
+    <div class="swatch" style="background:#FAF6EB; color:#1B2A41;">surface<br>#FAF6EB</div>
+    <div class="swatch" style="background:#1B2A41; color:white;">text<br>navy</div>
+    <div class="swatch" style="background:#7A8C3A; color:white;">correct<br>olive</div>
+    <div class="swatch" style="background:#D17B3F; color:white;">present<br>burnt</div>
+    <div class="swatch" style="background:#9C8B7A; color:white;">absent<br>taupe</div>
+  </div>
+
+  <h2>tile game</h2>
+  <p class="label">main 1 baris kata "KURSI" dengan pattern win/present/absent</p>
   <div class="row">
-    <div class="a-tile correct">B</div>
-    <div class="a-tile filled">U</div>
-    <div class="a-tile present">K</div>
-    <div class="a-tile filled">U</div>
-    <div class="a-tile absent">T</div>
+    <div class="tile correct">K</div>
+    <div class="tile present">U</div>
+    <div class="tile present">R</div>
+    <div class="tile absent">S</div>
+    <div class="tile filled">I</div>
   </div>
 
-  <h2>OPSI B — Glass / Frosted (modern, premium)</h2>
-  <p class="label">Inspirasi: iOS glass material, Apple Music. Modern, lightweight, premium feel.</p>
-  <div class="b-bg">
-    <div class="row">
-      <div class="b-tile correct">B</div>
-      <div class="b-tile filled">U</div>
-      <div class="b-tile present">K</div>
-      <div class="b-tile filled">U</div>
-      <div class="b-tile absent">T</div>
-    </div>
+  <h2>topbar pills</h2>
+  <p class="label">hover ke pills untuk lihat warna berubah jadi olive</p>
+  <div>
+    <span class="btn-pill">Leaderboard</span>
+    <span class="btn-pill">Statistik</span>
+    <span class="btn-pill">🔥 12</span>
+    <span class="btn-pill">Cara Bermain</span>
+    <span class="btn-pill">Riwayat Bermain</span>
+    <span class="btn-pill">Pembaruan</span>
   </div>
 
-  <h2>OPSI C — Editorial / Newspaper (distinctive, anti-AI)</h2>
-  <p class="label">Inspirasi: Are.na, The Browser Company, koran lawas. Serif font, sharp edges, high contrast. Paling distinctive — nggak ada game tebak kata yang pakai vibe ini.</p>
-  <div class="c-bg">
-    <div class="row">
-      <div class="c-tile correct">B</div>
-      <div class="c-tile filled">U</div>
-      <div class="c-tile present">K</div>
-      <div class="c-tile filled">U</div>
-      <div class="c-tile absent">T</div>
-    </div>
+  <h2>stat card</h2>
+  <div class="card">
+    <div class="stat-value">142</div>
+    <div class="stat-label">total main</div>
   </div>
+
+  <h2>tombol utama (CTA)</h2>
+  <button class="btn-primary">lanjut slot 2 dari 5 →</button>
+  
+  <div style="height: 3rem;"></div>
 </body>
 </html>

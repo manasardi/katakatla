@@ -1,6 +1,6 @@
 /* =========================================
    KATAKATLA — LEADERBOARD
-   + avatar + my-rank + tahunan + archive navigation
+   v3: Formal Indonesian + earthy avatar palette
 ========================================= */
 
 const tabsEl = document.querySelectorAll('.lb-tab');
@@ -16,20 +16,13 @@ const navNextEl = document.getElementById('lb-nav-next');
 
 let currentPeriod = 'daily';
 let currentUserId = null;
-
-// Cursor untuk navigasi arsip (null = periode aktif sekarang)
-// Format:
-//  daily: 'YYYY-MM-DD'
-//  weekly: 'YYYY-MM-DD' (tanggal apapun dalam minggu itu)
-//  monthly: { year: 2026, month: 5 }
-//  yearly: 2026
 let cursor = null;
 
 const PERIOD_LABEL = {
-  daily: 'hari ini',
-  weekly: 'minggu ini',
-  monthly: 'bulan ini',
-  yearly: 'tahun ini',
+  daily: 'Hari Ini',
+  weekly: 'Minggu Ini',
+  monthly: 'Bulan Ini',
+  yearly: 'Tahun Ini',
 };
 
 const MONTH_NAMES = [
@@ -37,13 +30,18 @@ const MONTH_NAMES = [
   'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
 ];
 
-// Batas mundur: Januari 2026
 const MIN_DATE = new Date('2026-01-01');
 
-// 8 warna lembut buat avatar bubble
+// 8 warna earthy yang sevibes palette baru
 const AVATAR_COLORS = [
-  '#FF6B6B', '#4ECDC4', '#FFC93C', '#A78BFA',
-  '#F472B6', '#34D399', '#FB923C', '#60A5FA'
+  '#C76F5A',  // terracotta
+  '#739B8D',  // sage cyan
+  '#D4A22B',  // mustard yellow
+  '#8B6F9E',  // dusty mauve
+  '#C28E94',  // dusty rose
+  '#94A847',  // olive green
+  '#D17B3F',  // burnt orange
+  '#6B829E'   // dusty blue
 ];
 
 function getAvatarColor(username) {
@@ -65,13 +63,12 @@ function getWIBDate() {
   return wibTime.toISOString().split('T')[0];
 }
 
-// ===== TAB SWITCH =====
 function setActiveTab(period) {
   tabsEl.forEach(tab => {
     tab.classList.toggle('active', tab.dataset.period === period);
   });
   currentPeriod = period;
-  cursor = null; // RESET cursor ke periode aktif setiap switch tab
+  cursor = null;
   loadLeaderboard();
 }
 
@@ -79,27 +76,20 @@ tabsEl.forEach(tab => {
   tab.addEventListener('click', () => setActiveTab(tab.dataset.period));
 });
 
-// ===== NAVIGATION (PREV / NEXT) =====
 navPrevEl.addEventListener('click', () => navigatePeriod(-1));
 navNextEl.addEventListener('click', () => navigatePeriod(1));
 
 function navigatePeriod(direction) {
-  // direction: -1 (mundur) atau 1 (maju)
-  
   if (currentPeriod === 'daily') {
     const baseDate = cursor ? new Date(cursor) : new Date(getWIBDate());
     baseDate.setDate(baseDate.getDate() + direction);
     cursor = baseDate.toISOString().split('T')[0];
-    
-    // Kalau cursor sampai ke periode aktif, reset ke null
     if (cursor === getWIBDate()) cursor = null;
   }
   else if (currentPeriod === 'weekly') {
     const baseDate = cursor ? new Date(cursor) : new Date(getWIBDate());
     baseDate.setDate(baseDate.getDate() + (direction * 7));
     cursor = baseDate.toISOString().split('T')[0];
-    
-    // Kalau minggu yang dituju sama dengan minggu ini, reset
     if (isSameWeek(new Date(cursor), new Date(getWIBDate()))) cursor = null;
   }
   else if (currentPeriod === 'monthly') {
@@ -110,17 +100,11 @@ function navigatePeriod(direction) {
     let newMonth = baseMonth + direction;
     let newYear = baseYear;
     
-    if (newMonth < 1) {
-      newMonth = 12;
-      newYear -= 1;
-    } else if (newMonth > 12) {
-      newMonth = 1;
-      newYear += 1;
-    }
+    if (newMonth < 1) { newMonth = 12; newYear -= 1; }
+    else if (newMonth > 12) { newMonth = 1; newYear += 1; }
     
     cursor = { year: newYear, month: newMonth };
     
-    // Reset kalau di bulan aktif
     if (newYear === now.getFullYear() && newMonth === (now.getMonth() + 1)) {
       cursor = null;
     }
@@ -129,9 +113,7 @@ function navigatePeriod(direction) {
     const now = new Date();
     const baseYear = cursor ? cursor : now.getFullYear();
     const newYear = baseYear + direction;
-    
     cursor = newYear;
-    
     if (newYear === now.getFullYear()) cursor = null;
   }
   
@@ -140,7 +122,7 @@ function navigatePeriod(direction) {
 
 function isSameWeek(d1, d2) {
   const startOfWeek = (d) => {
-    const day = d.getDay() || 7; // Senin = 1
+    const day = d.getDay() || 7;
     const start = new Date(d);
     start.setDate(d.getDate() - (day - 1));
     start.setHours(0, 0, 0, 0);
@@ -149,18 +131,15 @@ function isSameWeek(d1, d2) {
   return startOfWeek(d1).getTime() === startOfWeek(d2).getTime();
 }
 
-// ===== LABEL GENERATION =====
 function getLabel() {
-  // Label berdasarkan cursor (null = periode aktif)
-  
   if (currentPeriod === 'daily') {
-    if (cursor === null) return 'hari ini';
+    if (cursor === null) return 'Hari Ini';
     const d = new Date(cursor);
     return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
   }
   
   if (currentPeriod === 'weekly') {
-    if (cursor === null) return 'minggu ini';
+    if (cursor === null) return 'Minggu Ini';
     const d = new Date(cursor);
     const start = new Date(d);
     const day = d.getDay() || 7;
@@ -174,24 +153,21 @@ function getLabel() {
   }
   
   if (currentPeriod === 'monthly') {
-    if (cursor === null) return 'bulan ini';
+    if (cursor === null) return 'Bulan Ini';
     return `${MONTH_NAMES[cursor.month - 1]} ${cursor.year}`;
   }
   
   if (currentPeriod === 'yearly') {
-    if (cursor === null) return 'tahun ini';
-    return `tahun ${cursor}`;
+    if (cursor === null) return 'Tahun Ini';
+    return `Tahun ${cursor}`;
   }
   
   return '';
 }
 
-// ===== DISABLE NAV BUTTONS =====
 function updateNavButtons() {
-  // Disable "next" kalau di periode aktif
   navNextEl.disabled = (cursor === null);
   
-  // Disable "prev" kalau udah di batas mundur (Januari 2026)
   let isPastMinDate = false;
   
   if (currentPeriod === 'daily') {
@@ -224,7 +200,6 @@ function updateNavButtons() {
   navPrevEl.disabled = isPastMinDate;
 }
 
-// ===== UI HELPERS =====
 function showLoading() {
   loadingEl.classList.remove('hidden');
   tableEl.classList.add('hidden');
@@ -246,7 +221,7 @@ function showTable() {
 }
 
 function buildRowHtml(row, isMe = false) {
-  const username = row.username || 'anonim';
+  const username = row.username || 'Anonim';
   const initial = getInitial(username);
   const color = getAvatarColor(username);
   
@@ -254,7 +229,7 @@ function buildRowHtml(row, isMe = false) {
     ? `<span class="streak-inline">🔥${row.streak}</span>` 
     : '';
   
-  const meBadge = isMe ? '<span class="me-badge">kamu</span>' : '';
+  const meBadge = isMe ? '<span class="me-badge">Anda</span>' : '';
   
   return `
     <td class="col-rank">${row.rank}</td>
@@ -297,12 +272,10 @@ function escapeHtml(str) {
   return div.innerHTML;
 }
 
-// ===== LOAD LEADERBOARD =====
 async function loadLeaderboard() {
   showLoading();
   
-  // Update label + nav buttons
-  infoEl.innerHTML = `peringkat <span class="lb-info-current">${getLabel()}</span> · top 50`;
+  infoEl.innerHTML = `Peringkat <span class="lb-info-current">${getLabel()}</span> · Top 50`;
   updateNavButtons();
   
   const fnName = getFnName();
@@ -313,7 +286,7 @@ async function loadLeaderboard() {
     
     if (error) {
       console.error(`❌ Gagal fetch ${currentPeriod}:`, error.message);
-      infoEl.textContent = `error: ${error.message}`;
+      infoEl.textContent = `Kesalahan: ${error.message}`;
       showEmpty();
       return;
     }
@@ -340,7 +313,6 @@ async function loadLeaderboard() {
 }
 
 function getFnName() {
-  // Kalau cursor null → pakai RPC periode aktif (yang lama)
   if (cursor === null) {
     return {
       daily: 'get_leaderboard_daily',
@@ -349,7 +321,6 @@ function getFnName() {
       yearly: 'get_leaderboard_yearly',
     }[currentPeriod];
   }
-  // Kalau cursor ada → pakai RPC *_at
   return {
     daily: 'get_leaderboard_daily_at',
     weekly: 'get_leaderboard_weekly_at',
@@ -373,9 +344,7 @@ function getFnParams() {
   return {};
 }
 
-// ===== MY RANK (kalau user nggak top 50) =====
 async function loadMyRank() {
-  // Tentuin date range berdasarkan cursor + period
   let dateFilter;
   const today = getWIBDate();
   
@@ -460,7 +429,7 @@ async function loadMyRank() {
   const myRow = {
     rank: myIdx + 1,
     user_id: currentUserId,
-    username: profile?.username || 'anonim',
+    username: profile?.username || 'Anonim',
     total_score: myStats.total_score,
     played: myStats.played,
     solved: myStats.solved,
@@ -470,7 +439,6 @@ async function loadMyRank() {
   renderMyRank(myRow);
 }
 
-// ===== INIT =====
 (async function init() {
   const { data: { user } } = await supabaseClient.auth.getUser();
   if (user) {

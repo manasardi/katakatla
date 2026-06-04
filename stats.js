@@ -1,6 +1,6 @@
 /* =========================================
    KATAKATLA — STATS PERSONAL
-   + edit username
+   v3: Formal Indonesian copy text
 ========================================= */
 
 const loadingEl = document.getElementById('stats-loading');
@@ -36,7 +36,7 @@ function formatDate(dateStr) {
 }
 
 function renderProfile(username) {
-  profileUsernameEl.textContent = username || 'pemain anonim';
+  profileUsernameEl.textContent = username || 'Pemain Anonim';
   currentUsername = username;
 }
 
@@ -76,7 +76,7 @@ function renderDistribution(distribution) {
 
 function renderRecentDays(days) {
   if (!days || days.length === 0) {
-    recentDaysEl.innerHTML = '<p class="empty-note">belum ada riwayat</p>';
+    recentDaysEl.innerHTML = '<p class="empty-note">Belum ada riwayat</p>';
     return;
   }
   
@@ -166,22 +166,22 @@ async function saveNewUsername() {
   const newUsername = editInputEl.value.trim();
   
   if (newUsername === currentUsername) {
-    editErrorEl.textContent = 'username belum diubah';
+    editErrorEl.textContent = 'Username belum diubah';
     return;
   }
   
   // Client-side validation (server-side juga validate)
   if (newUsername.length < 3 || newUsername.length > 20) {
-    editErrorEl.textContent = 'username harus 3-20 karakter';
+    editErrorEl.textContent = 'Username harus 3-20 karakter';
     return;
   }
   if (!/^[a-zA-Z0-9_]+$/.test(newUsername)) {
-    editErrorEl.textContent = 'cuma huruf, angka, underscore';
+    editErrorEl.textContent = 'Hanya huruf, angka, dan garis bawah';
     return;
   }
   
   editSaveEl.disabled = true;
-  editSaveEl.textContent = 'menyimpan...';
+  editSaveEl.textContent = 'Menyimpan...';
   editErrorEl.textContent = '';
   
   const { data, error } = await supabaseClient.rpc('change_username', {
@@ -189,16 +189,16 @@ async function saveNewUsername() {
   });
   
   editSaveEl.disabled = false;
-  editSaveEl.textContent = 'simpan';
+  editSaveEl.textContent = 'Simpan';
   
   if (error) {
     console.error('❌ RPC error:', error);
-    editErrorEl.textContent = 'error sistem, coba lagi';
+    editErrorEl.textContent = 'Kesalahan sistem, silakan coba lagi';
     return;
   }
   
   if (!data.success) {
-    editErrorEl.textContent = data.error || 'gagal simpan';
+    editErrorEl.textContent = data.error || 'Gagal menyimpan';
     return;
   }
   
@@ -207,8 +207,7 @@ async function saveNewUsername() {
   renderProfile(newUsername);
   closeEditModal();
   
-  // Optional: show toast or feedback
-  alert(`username berhasil diubah jadi ${newUsername}`);
+  alert(`Username berhasil diubah menjadi ${newUsername}`);
 }
 
 // Setup event listeners
@@ -221,6 +220,18 @@ if (editInputEl) {
     if (e.key === 'Enter') saveNewUsername();
   });
 }
+
+// Backdrop + Esc close
+if (editModalEl) {
+  editModalEl.addEventListener('click', (e) => {
+    if (e.target === editModalEl) closeEditModal();
+  });
+}
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && editModalEl && !editModalEl.classList.contains('hidden')) {
+    closeEditModal();
+  }
+});
 
 // Init
 (async function init() {

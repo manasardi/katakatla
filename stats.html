@@ -3,30 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>stats — katakatla</title>
+  <title>katakatla — statistik pribadi</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%232D7D6F%22/><text y=%22.9em%22 font-size=%2270%22 x=%2250%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22700%22 fill=%22white%22>k</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%237A8C3A%22/><text y=%22.9em%22 font-size=%2270%22 x=%2250%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22700%22 fill=%22white%22>k</text></svg>">
   <link rel="stylesheet" href="style.css">
+
+  <!-- Inline theme apply biar nggak flash -->
+  <script>
+    (function() {
+      const saved = localStorage.getItem('katakatla_theme');
+      const theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
 </head>
 <body>
   <header class="topbar">
     <a href="index.html" class="logo-link">
       <h1 class="logo">katakatla</h1>
     </a>
-    <p class="page-label">stats</p>
+    <p class="page-label">Statistik Pribadi</p>
   </header>
 
   <main class="lb-page">
     <div class="page-top-bar">
-      <a href="index.html" class="back-link">← balik ke game</a>
-      <button id="theme-toggle" class="lb-link" type="button" aria-label="ganti tema" style="margin-top:0;">🌙</button>
+      <a href="index.html" class="back-link">← Kembali ke Permainan</a>
+      <button id="theme-toggle" class="lb-link" type="button" aria-label="Ganti Tema" style="margin-top:0;">🌙</button>
     </div>
 
-    <div id="stats-loading" class="lb-loading">memuat stats...</div>
+    <div id="stats-loading" class="lb-loading">Memuat statistik...</div>
 
     <div id="stats-content" class="hidden">
       <!-- User profile section -->
@@ -35,25 +44,25 @@
           <div class="profile-avatar">👤</div>
           <div class="profile-detail">
             <div class="profile-name" id="profile-username">–</div>
-            <div class="profile-meta" id="profile-meta">pemain katakatla</div>
+            <div class="profile-meta" id="profile-meta">Pemain Katakatla</div>
           </div>
         </div>
-        <button id="edit-username-btn" class="btn-edit" type="button">⚙️ ubah</button>
+        <button id="edit-username-btn" class="btn-edit" type="button">Ubah</button>
       </section>
 
       <!-- Hero stats -->
       <section class="stats-hero">
         <div class="hero-card">
           <div class="hero-value" id="stat-played">0</div>
-          <div class="hero-label">total dimainkan</div>
+          <div class="hero-label">Total Dimainkan</div>
         </div>
         <div class="hero-card">
           <div class="hero-value" id="stat-winrate">0<span class="hero-unit">%</span></div>
-          <div class="hero-label">win rate</div>
+          <div class="hero-label">Persentase Menang</div>
         </div>
         <div class="hero-card">
           <div class="hero-value" id="stat-score">0</div>
-          <div class="hero-label">total skor</div>
+          <div class="hero-label">Total Skor</div>
         </div>
       </section>
 
@@ -62,60 +71,57 @@
         <div class="streak-icon">🔥</div>
         <div class="streak-info">
           <div class="streak-value" id="stat-streak">0 hari</div>
-          <div class="streak-label">streak berturut-turut</div>
+          <div class="streak-label">Streak Berturut-turut</div>
         </div>
       </section>
 
       <!-- Score distribution -->
       <section class="stats-section">
-        <h3 class="section-title">distribusi tebakan</h3>
-        <p class="section-subtitle">berapa kali menang di tebakan ke-N</p>
+        <h3 class="section-title">Distribusi Tebakan</h3>
+        <p class="section-subtitle">Jumlah kemenangan berdasarkan tebakan ke-N</p>
         <div id="distribution-chart" class="dist-chart"></div>
       </section>
 
       <!-- Recent days -->
       <section class="stats-section">
-        <h3 class="section-title">7 hari terakhir</h3>
+        <h3 class="section-title">7 Hari Terakhir</h3>
         <div id="recent-days" class="recent-list"></div>
       </section>
     </div>
 
     <div id="stats-empty" class="lb-empty hidden">
-      belum ada data. main dulu yuk!
+      Belum ada data. Mulai bermain terlebih dahulu.
     </div>
   </main>
 
   <!-- Modal: Edit Username -->
   <div id="edit-username-modal" class="modal hidden">
     <div class="modal-content">
-      <button id="edit-username-close" class="modal-close" type="button" aria-label="tutup">✕</button>
-      <h2>ubah username</h2>
-      <p class="username-hint">username baru akan muncul di leaderboard. <strong>kamu cuma bisa ganti 1x per 7 hari.</strong></p>
-      <input type="text" id="edit-username-input" placeholder="username baru" maxlength="20" autocomplete="off">
+      <button id="edit-username-close" class="modal-close" type="button" aria-label="Tutup">✕</button>
+      <h2>Ubah Username</h2>
+      <p class="modal-subtext">Username baru akan ditampilkan pada papan peringkat. <strong>Anda hanya dapat mengubah username satu kali dalam 7 hari.</strong></p>
+      <input type="text" id="edit-username-input" class="username-input" placeholder="Username baru" maxlength="20" autocomplete="off">
       <p id="edit-username-error" class="username-error"></p>
-      <div class="username-actions">
-        <button id="edit-username-cancel" class="btn-secondary" type="button">batal</button>
-        <button id="edit-username-save" class="modal-button" type="button">simpan</button>
-      </div>
+      <button id="edit-username-save" class="modal-button" type="button">Simpan</button>
+      <button id="edit-username-cancel" class="btn-secondary" type="button">Batal</button>
     </div>
   </div>
+
+  <footer class="site-footer">
+    <div class="site-footer-links">
+      <a href="privacy.html">Kebijakan Privasi</a>
+      <span>·</span>
+      <a href="terms.html">Syarat & Ketentuan</a>
+      <span>·</span>
+      <a href="https://github.com/manasardi/katakatla" target="_blank" rel="noopener">Repositori GitHub</a>
+    </div>
+  </footer>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-client.js"></script>
   <script src="stats.js"></script>
 
-<footer class="site-footer">
-    <div class="site-footer-credit">made with ❤️ by anas</div>
-    <div class="site-footer-links">
-      <a href="privacy.html">privasi</a>
-      <span>·</span>
-      <a href="terms.html">syarat</a>
-      <span>·</span>
-      <a href="https://github.com/manasardi/katakatla" target="_blank" rel="noopener">github</a>
-    </div>
-  </footer>
-
-<script>
+  <script>
     (function() {
       const THEME_KEY = 'katakatla_theme';
       function getEffectiveTheme() {
@@ -128,7 +134,7 @@
         const btn = document.getElementById('theme-toggle');
         if (btn) {
           btn.textContent = theme === 'dark' ? '☀️' : '🌙';
-          btn.setAttribute('aria-label', theme === 'dark' ? 'mode terang' : 'mode gelap');
+          btn.setAttribute('aria-label', theme === 'dark' ? 'Mode Terang' : 'Mode Gelap');
         }
       }
       function toggleTheme() {
@@ -144,6 +150,5 @@
       });
     })();
   </script>
-</body>  
 </body>
 </html>

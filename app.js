@@ -1,6 +1,6 @@
 /* =========================================
    KATAKATLA — GAME LOGIC
-   Phase 4 + 15 + 16 + 17 + persist + howto + history nav + side panel + esc/backdrop
+   v8: Formal Indonesian copy text (sweep lengkap)
 ========================================= */
 
 // ===== KONFIGURASI =====
@@ -87,7 +87,7 @@ function previewSlot(slotNum) {
   const target = dailyWords.find(w => w.slot === slotNum);
   
   if (!guesses || !target) {
-    showToast('belum ada riwayat di slot ini');
+    showToast('Belum ada riwayat pada slot ini');
     return;
   }
   
@@ -96,7 +96,7 @@ function previewSlot(slotNum) {
   viewingSlot = slotNum;
   state.isGameOver = true;
   
-  showToast(`riwayat slot ${slotNum}`);
+  showToast(`Riwayat Slot ${slotNum}`);
 }
 
 function exitPreviewMode() {
@@ -125,7 +125,7 @@ async function loadDailyWords() {
   });
   if (error) {
     console.error('❌ Gagal fetch daily words:', error.message);
-    showToast('gagal load kata. coba refresh.');
+    showToast('Gagal memuat kata. Silakan muat ulang halaman');
     return false;
   }
   if (!data || data.length === 0) {
@@ -353,7 +353,7 @@ function getCurrentGuess() {
 // ===== SUBMIT & VALIDATE =====
 function submitGuess() {
   if (state.currentCol < WORD_LENGTH) {
-    showToast('kata kurang lengkap');
+    showToast('Kata kurang lengkap');
     shakeRow();
     return;
   }
@@ -367,7 +367,7 @@ function submitGuess() {
   const guess = getCurrentGuess();
   
   if (!validWords.has(guess)) {
-    showToast('kata tidak ada di kamus');
+    showToast('Kata tidak ditemukan dalam kamus');
     shakeRow();
     return;
   }
@@ -469,7 +469,7 @@ function fireConfetti() {
     particleCount: count,
     spread: isLastSlot ? 100 : 70,
     origin: { y: 0.6 },
-    colors: ['#22c55e', '#eab308', '#3b82f6', '#ec4899', '#f97316'],
+    colors: ['#7A8C3A', '#D17B3F', '#1B2A41', '#94A847', '#E08F52'],
   });
   if (isLastSlot) {
     setTimeout(() => confetti({ particleCount: 100, angle: 60, spread: 55, origin: { x: 0 } }), 250);
@@ -508,38 +508,38 @@ function buildShareText(isWin, attempt) {
   
   const guessesText = isWin 
     ? `${state.currentRow + 1}/6 tebakan` 
-    : `gagal (6/6)`;
+    : `Gagal (6/6)`;
   
   const scoreText = (isWin && attempt) 
-    ? `skor: ${attempt.score}` 
-    : 'skor: 0';
+    ? `Skor: ${attempt.score}` 
+    : 'Skor: 0';
   
-  return `katakatla ${dateStr} — slot ${state.currentSlot}/${TOTAL_SLOTS}
+  return `Katakatla ${dateStr} — Slot ${state.currentSlot}/${TOTAL_SLOTS}
 
 ${emojiGrid}
 
 ${scoreText} · ${guessesText}
 
-main: katakatla.vercel.app`;
+Mainkan: katakatla.vercel.app`;
 }
 
 async function handleReport(target) {
   if (!target || !target.word_id) {
-    showToast('error: kata tidak teridentifikasi');
+    showToast('Kata tidak teridentifikasi');
     return;
   }
   
-  const confirmed = confirm(`yakin mau laporin kata "${target.word}"?\n\nlaporan ini bakal direview admin.`);
+  const confirmed = confirm(`Yakin ingin melaporkan kata "${target.word}"?\n\nLaporan ini akan direview oleh admin.`);
   if (!confirmed) return;
   
   modalReportBtnEl.disabled = true;
-  modalReportBtnEl.textContent = 'mengirim...';
+  modalReportBtnEl.textContent = 'Mengirim...';
   
   const { data: { user } } = await supabaseClient.auth.getUser();
   if (!user) {
-    showToast('session error, refresh aja');
+    showToast('Sesi bermasalah, silakan muat ulang halaman');
     modalReportBtnEl.disabled = false;
-    modalReportBtnEl.textContent = '🚩 laporin kata';
+    modalReportBtnEl.textContent = 'Laporkan Kata';
     return;
   }
   
@@ -553,14 +553,14 @@ async function handleReport(target) {
   
   if (error) {
     console.error('❌ Report gagal:', error.message);
-    showToast('gagal laporin, coba lagi');
+    showToast('Gagal melaporkan, silakan coba lagi');
     modalReportBtnEl.disabled = false;
-    modalReportBtnEl.textContent = '🚩 laporin kata';
+    modalReportBtnEl.textContent = 'Laporkan Kata';
     return;
   }
   
-  modalReportBtnEl.textContent = '✓ terlapor, terima kasih';
-  showToast('kata terlapor!');
+  modalReportBtnEl.textContent = 'Terlapor, terima kasih';
+  showToast('Kata berhasil dilaporkan');
 }
 
 async function handleShare(isWin, attempt) {
@@ -569,7 +569,7 @@ async function handleShare(isWin, attempt) {
   if (navigator.share) {
     try {
       await navigator.share({
-        title: 'katakatla',
+        title: 'Katakatla',
         text: text,
       });
       console.log('✅ Shared via Web Share');
@@ -582,10 +582,10 @@ async function handleShare(isWin, attempt) {
   
   try {
     await navigator.clipboard.writeText(text);
-    showToast('hasil disalin ke clipboard');
+    showToast('Hasil disalin ke papan klip');
   } catch (err) {
     console.error('❌ Clipboard juga gagal:', err);
-    showToast('gagal share, coba lagi');
+    showToast('Gagal membagikan, silakan coba lagi');
   }
 }
 
@@ -597,27 +597,27 @@ function showSlotEndModal(isWin, attempt) {
   const target = getCurrentTarget();
   const isLastSlot = state.currentSlot >= TOTAL_SLOTS;
   
-  modalTitleEl.textContent = isWin ? '🎉 menang!' : '😢 kalah';
+  modalTitleEl.textContent = isWin ? 'Berhasil!' : 'Belum Berhasil';
   
   let message;
   if (isWin && attempt) {
-    message = `kamu nemu kata "${target.word}" dalam ${state.currentRow + 1} tebakan. skor: ${attempt.score}.`;
+    message = `Anda menemukan kata "${target.word}" dalam ${state.currentRow + 1} tebakan. Skor: ${attempt.score}.`;
   } else if (isWin) {
-    message = `kamu nemu kata "${target.word}".`;
+    message = `Anda menemukan kata "${target.word}".`;
   } else {
-    message = `kata-nya adalah "${target.word}".`;
+    message = `Kata yang dicari adalah "${target.word}".`;
   }
   
   modalMessageEl.textContent = message;
   
   if (isLastSlot) {
-    modalButtonEl.textContent = 'lihat hasilmu hari ini';
+    modalButtonEl.textContent = 'Lihat Hasil Hari Ini';
     modalButtonEl.onclick = () => {
       modalEl.classList.add('hidden');
       maybeShowUsernamePrompt(() => showDayCompleteModal());
     };
   } else {
-    modalButtonEl.textContent = `lanjut slot ${state.currentSlot + 1} dari ${TOTAL_SLOTS} →`;
+    modalButtonEl.textContent = `Lanjut ke Slot ${state.currentSlot + 1} →`;
     modalButtonEl.onclick = () => {
       modalEl.classList.add('hidden');
       maybeShowUsernamePrompt(() => goToNextSlot());
@@ -633,7 +633,7 @@ function showSlotEndModal(isWin, attempt) {
   
   modalReportBtnEl.classList.remove('hidden');
   modalReportBtnEl.disabled = false;
-  modalReportBtnEl.textContent = '🚩 laporin kata';
+  modalReportBtnEl.textContent = 'Laporkan Kata';
   modalReportBtnEl.onclick = () => handleReport(target);
   
   modalEl.classList.remove('hidden');
@@ -648,10 +648,10 @@ function goToNextSlot() {
 
 function showDayCompleteModal() {
   state.isDayComplete = true;
-  modalTitleEl.textContent = '🏆 selesai!';
-  modalMessageEl.textContent = `kamu udah main 5 slot hari ini. balik lagi besok untuk kata-kata baru.`;
+  modalTitleEl.textContent = 'Permainan Selesai';
+  modalMessageEl.textContent = `Anda telah menyelesaikan 5 slot hari ini. Kembalilah besok untuk kata-kata baru.`;
   countdownBlockEl.style.display = '';
-  modalButtonEl.textContent = 'tutup';
+  modalButtonEl.textContent = 'Tutup';
   modalButtonEl.onclick = () => {
     modalEl.classList.add('hidden');
     stopCountdown();
@@ -669,7 +669,6 @@ async function handleDayShare() {
     day: 'numeric', month: 'long', year: 'numeric'
   });
   
-  let totalScore = 0;
   let solved = 0;
   const slotResults = [];
   
@@ -680,18 +679,18 @@ async function handleDayShare() {
       const isWin = guesses.includes(target.word);
       if (isWin) {
         solved++;
-        slotResults.push(`slot ${s}: ${guesses.indexOf(target.word) + 1}/6 ✅`);
+        slotResults.push(`Slot ${s}: ${guesses.indexOf(target.word) + 1}/6 ✅`);
       } else {
-        slotResults.push(`slot ${s}: gagal ❌`);
+        slotResults.push(`Slot ${s}: Gagal ❌`);
       }
     }
   }
   
-  const text = `katakatla ${today} 🏆\n\n${slotResults.join('\n')}\n\nselesai ${solved}/${TOTAL_SLOTS} slot\n\nmain: katakatla.vercel.app`;
+  const text = `Katakatla ${today} 🏆\n\n${slotResults.join('\n')}\n\nSelesai ${solved}/${TOTAL_SLOTS} slot\n\nMainkan: katakatla.vercel.app`;
   
   if (navigator.share) {
     try {
-      await navigator.share({ title: 'katakatla', text });
+      await navigator.share({ title: 'Katakatla', text });
       return;
     } catch (err) {
       if (err.name === 'AbortError') return;
@@ -700,9 +699,9 @@ async function handleDayShare() {
   
   try {
     await navigator.clipboard.writeText(text);
-    showToast('hasil disalin ke clipboard');
+    showToast('Hasil disalin ke papan klip');
   } catch (err) {
-    showToast('gagal share, coba lagi');
+    showToast('Gagal membagikan, silakan coba lagi');
   }
 }
 
@@ -744,7 +743,7 @@ function updateCountdown() {
   const ms = reset - now;
   
   if (ms <= 0) {
-    countdownTimeEl.textContent = 'segera!';
+    countdownTimeEl.textContent = 'Segera';
     return;
   }
   
@@ -789,26 +788,26 @@ function showUsernameModal(onContinue) {
     const username = usernameInputEl.value.trim();
     
     if (username.length < 3 || username.length > 20) {
-      usernameErrorEl.textContent = 'username harus 3-20 karakter';
+      usernameErrorEl.textContent = 'Username harus 3-20 karakter';
       return;
     }
     if (!/^[a-zA-Z0-9_]+$/.test(username)) {
-      usernameErrorEl.textContent = 'cuma huruf, angka, underscore';
+      usernameErrorEl.textContent = 'Hanya huruf, angka, dan garis bawah';
       return;
     }
     
     usernameSetBtnEl.disabled = true;
-    usernameSetBtnEl.textContent = 'menyimpan...';
+    usernameSetBtnEl.textContent = 'Menyimpan...';
     
     const result = await updateUsername(username);
     
     usernameSetBtnEl.disabled = false;
-    usernameSetBtnEl.textContent = 'set username';
+    usernameSetBtnEl.textContent = 'Tetapkan Username';
     
     if (result.success) {
       localStorage.setItem(USERNAME_ASKED_KEY, 'true');
       usernameModalEl.classList.add('hidden');
-      showToast(`username diset: ${username}`);
+      showToast(`Username ditetapkan: ${username}`);
       onContinue();
     } else {
       usernameErrorEl.textContent = result.error;
@@ -824,7 +823,7 @@ function showUsernameModal(onContinue) {
 
 async function updateUsername(newUsername) {
   const { data: { user } } = await supabaseClient.auth.getUser();
-  if (!user) return { success: false, error: 'session error, refresh aja' };
+  if (!user) return { success: false, error: 'Sesi bermasalah, silakan muat ulang halaman' };
   
   const { error } = await supabaseClient
     .from('profiles')
@@ -833,17 +832,17 @@ async function updateUsername(newUsername) {
   
   if (error) {
     if (error.code === '23505') {
-      return { success: false, error: 'username udah dipake orang lain' };
+      return { success: false, error: 'Username sudah digunakan' };
     }
     console.error('❌ Update username error:', error);
-    return { success: false, error: 'gagal simpan, coba lagi' };
+    return { success: false, error: 'Gagal menyimpan, silakan coba lagi' };
   }
   
   console.log(`✅ Username updated: ${newUsername}`);
   return { success: true };
 }
 
-// ===== PHYSICAL KEYBOARD (game input only) =====
+// ===== PHYSICAL KEYBOARD =====
 document.addEventListener('keydown', (e) => {
   if (!usernameModalEl.classList.contains('hidden')) {
     if (e.key === 'Enter') usernameSetBtnEl.click();
@@ -1065,19 +1064,19 @@ function renderSideHistory() {
       statusIcon = '✓';
       cardClass = 'is-won';
     } else if (isLost) {
-      statusText = 'gagal';
+      statusText = 'Gagal';
       statusIcon = '✗';
       cardClass = 'is-lost';
     } else if (isInProgress) {
       statusText = `${guesses.length}/6`;
-      statusIcon = '⏳';
+      statusIcon = '•';
       cardClass = isCurrent ? 'is-current' : '';
     } else if (isCurrent) {
-      statusText = 'sekarang';
+      statusText = 'Aktif';
       statusIcon = '▸';
       cardClass = 'is-current';
     } else {
-      statusText = 'belum';
+      statusText = 'Belum Dimulai';
       statusIcon = '–';
       cardClass = '';
     }
@@ -1089,7 +1088,7 @@ function renderSideHistory() {
     
     btn.innerHTML = `
       <span class="side-slot-num">${s}</span>
-      <span class="side-slot-label">slot ${s}</span>
+      <span class="side-slot-label">Slot ${s}</span>
       <span class="side-slot-status">${statusIcon} ${statusText}</span>
     `;
     
@@ -1122,7 +1121,7 @@ async function loadSideStats() {
   
   if (statsError) {
     console.error('❌ Gagal load side stats:', statsError.message);
-    sideStatsLoadingEl.textContent = 'gagal load';
+    sideStatsLoadingEl.textContent = 'Gagal memuat';
     return;
   }
   
@@ -1171,7 +1170,7 @@ async function loadSideStats() {
     console.warn('⚠ Valid words gagal load, validation mati');
   }
   if (!wordsLoaded) {
-    showToast('gagal load game. cek console.');
+    showToast('Gagal memuat permainan');
     return;
   }
   
@@ -1230,7 +1229,7 @@ async function loadSideStats() {
   }
   
   if (nextSlot > 1) {
-    showToast(`lanjut slot ${nextSlot} dari ${TOTAL_SLOTS}`);
+    showToast(`Lanjut ke Slot ${nextSlot} dari ${TOTAL_SLOTS}`);
   }
   
   renderSideHistory();
@@ -1249,7 +1248,7 @@ function applyTheme(theme) {
   document.documentElement.setAttribute('data-theme', theme);
   if (themeToggle) {
     themeToggle.textContent = theme === 'dark' ? '☀️' : '🌙';
-    themeToggle.setAttribute('aria-label', theme === 'dark' ? 'mode terang' : 'mode gelap');
+    themeToggle.setAttribute('aria-label', theme === 'dark' ? 'Mode Terang' : 'Mode Gelap');
   }
 }
 
@@ -1267,7 +1266,6 @@ if (themeToggle) {
 }
 
 // ===== ESC + BACKDROP CLOSE MODAL =====
-// Sengaja di paling bawah biar semua variabel modal udah ke-declare
 document.addEventListener('keydown', (e) => {
   if (e.key !== 'Escape') return;
   

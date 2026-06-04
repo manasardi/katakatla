@@ -10,123 +10,131 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%232D7D6F%22/><text y=%22.9em%22 font-size=%2270%22 x=%2250%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22700%22 fill=%22white%22>k</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%237A8C3A%22/><text y=%22.9em%22 font-size=%2270%22 x=%2250%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22700%22 fill=%22white%22>k</text></svg>">
   <link rel="stylesheet" href="style.css">
+
+  <!-- Inline theme apply biar nggak flash -->
+  <script>
+    (function() {
+      const saved = localStorage.getItem('katakatla_theme');
+      const theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
 </head>
 <body>
+
+  <!-- ===== TOPBAR ===== -->
   <header class="topbar">
     <h1 class="logo">katakatla</h1>
-    <p class="subtitle">lima huruf · enam tebakan · setiap hari</p>
+    <p class="subtitle">Lima Huruf · Enam Tebakan · Setiap Hari</p>
     <div class="topbar-nav">
-      <a href="leaderboard.html" class="lb-link">🏆 leaderboard</a>
-      <a href="stats.html" class="lb-link">📊 stats</a>
+      <a href="leaderboard.html" class="lb-link">Leaderboard</a>
+      <a href="stats.html" class="lb-link">Statistik</a>
       <a href="stats.html" id="streak-badge" class="lb-link streak-hidden">🔥 <span id="streak-count">0</span></a>
-      <button id="howto-btn" class="lb-link" type="button">❓ cara main</button>
-      <button id="history-btn" class="lb-link" type="button">📋 riwayat</button>
-      <a href="updates.html" class="lb-link">📝 update</a>
-      <button id="theme-toggle" class="lb-link" type="button" aria-label="ganti tema">🌙</button>
+      <button id="howto-btn" class="lb-link" type="button">Cara Bermain</button>
+      <button id="history-btn" class="lb-link" type="button">Riwayat Bermain</button>
+      <a href="updates.html" class="lb-link">Pembaruan</a>
+      <button id="theme-toggle" class="lb-link" type="button" aria-label="Ganti Tema">🌙</button>
     </div>
   </header>
 
+  <!-- ===== SIDE PANEL: RIWAYAT (desktop only) ===== -->
   <aside id="side-history" class="side-panel side-panel-left">
-    <h3 class="side-title">riwayat hari ini</h3>
+    <h3 class="side-title">Riwayat Hari Ini</h3>
     <div id="side-history-slots" class="side-history-slots"></div>
   </aside>
 
+  <!-- ===== SIDE PANEL: STATISTIK (desktop only) ===== -->
   <aside id="side-stats" class="side-panel side-panel-right">
-    <h3 class="side-title">statistik kamu</h3>
-    <div id="side-stats-loading" class="side-stats-loading">memuat...</div>
+    <h3 class="side-title">Statistik Anda</h3>
+    <div id="side-stats-loading" class="side-stats-loading">Memuat...</div>
     <div id="side-stats-content" class="side-stats-content hidden">
       <div class="side-stat-row">
-        <span class="side-stat-icon">🔥</span>
         <div class="side-stat-info">
-          <span class="side-stat-label">streak</span>
+          <span class="side-stat-label">Streak</span>
           <span id="side-stat-streak" class="side-stat-value">0</span>
         </div>
       </div>
       <div class="side-stat-row">
-        <span class="side-stat-icon">🎯</span>
         <div class="side-stat-info">
-          <span class="side-stat-label">win rate</span>
+          <span class="side-stat-label">Persentase Menang</span>
           <span id="side-stat-winrate" class="side-stat-value">0%</span>
         </div>
       </div>
       <div class="side-stat-row">
-        <span class="side-stat-icon">🎮</span>
         <div class="side-stat-info">
-          <span class="side-stat-label">total main</span>
+          <span class="side-stat-label">Total Permainan</span>
           <span id="side-stat-total" class="side-stat-value">0</span>
         </div>
       </div>
       <div class="side-stat-divider"></div>
       <div class="side-stat-row">
-        <span class="side-stat-icon">🏆</span>
         <div class="side-stat-info">
-          <span class="side-stat-label">rank harian</span>
+          <span class="side-stat-label">Peringkat Harian</span>
           <span id="side-stat-rank" class="side-stat-value">–</span>
         </div>
       </div>
     </div>
-    <a href="stats.html" class="side-stats-link">lihat detail →</a>
+    <a href="stats.html" class="side-stats-link">Lihat Detail →</a>
   </aside>
 
+  <!-- ===== GAME AREA ===== -->
   <main class="game">
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
     <div id="grid" class="grid"></div>
     <div id="keyboard" class="keyboard"></div>
   </main>
 
-  <!-- Modal: hasil slot / day complete -->
+  <!-- ===== MODAL: hasil slot / day complete ===== -->
   <div id="modal" class="modal hidden">
     <div class="modal-content">
-      <button id="modal-close-x" class="modal-close" type="button" aria-label="tutup">✕</button>
+      <button id="modal-close-x" class="modal-close" type="button" aria-label="Tutup">✕</button>
       <h2 id="modal-title"></h2>
       <p id="modal-message"></p>
       <p id="modal-definition" class="modal-definition hidden"></p>
       <div id="countdown-block" class="countdown-block hidden">
-        <p class="countdown-text">kata baru dalam <span id="countdown-time">–</span></p>
-        <p class="countdown-meta">reset 07:00 WIB</p>
+        <p class="countdown-text">Kata baru dalam <span id="countdown-time">–</span></p>
+        <p class="countdown-meta">Reset pukul 07:00 WIB</p>
       </div>
-      <button id="modal-share-btn" class="btn-secondary hidden" type="button">📤 share hasil</button>
-      <button id="modal-report-btn" class="btn-tertiary hidden" type="button">🚩 laporin kata</button>
+      <button id="modal-share-btn" class="btn-secondary hidden" type="button">Bagikan Hasil</button>
+      <button id="modal-report-btn" class="btn-tertiary hidden" type="button">Laporkan Kata</button>
       <button id="modal-button" class="modal-button" type="button"></button>
     </div>
   </div>
 
-  <!-- Modal: username prompt -->
+  <!-- ===== MODAL: username prompt ===== -->
   <div id="username-modal" class="modal hidden">
     <div class="modal-content">
-      <h2>pilih username</h2>
-      <p class="username-hint">nama ini bakal muncul di leaderboard. bisa di-skip kalau mau anonim.</p>
-      <input type="text" id="username-input" placeholder="contoh: anas123" maxlength="20" autocomplete="off">
+      <h2>Pilih Username</h2>
+      <p class="modal-subtext">Nama ini akan ditampilkan pada papan peringkat. Anda dapat melewatinya untuk tetap anonim.</p>
+      <input type="text" id="username-input" class="username-input" placeholder="Contoh: anas123" maxlength="20" autocomplete="off">
       <p id="username-error" class="username-error"></p>
-      <div class="username-actions">
-        <button id="username-skip-btn" class="btn-secondary" type="button">skip</button>
-        <button id="username-set-btn" class="modal-button" type="button">set username</button>
-      </div>
+      <button id="username-set-btn" class="modal-button" type="button">Tetapkan Username</button>
+      <button id="username-skip-btn" class="btn-secondary" type="button">Lewati</button>
     </div>
   </div>
 
-  <!-- Modal: How to Play -->
+  <!-- ===== MODAL: Cara Bermain ===== -->
   <div id="howto-modal" class="modal hidden">
     <div class="modal-content howto-content">
-      <button id="howto-close" class="modal-close" type="button" aria-label="tutup">✕</button>
-      <h2 class="howto-title">cara main</h2>
-      
+      <button id="howto-close" class="modal-close" type="button" aria-label="Tutup">✕</button>
+      <h2 class="howto-title">Cara Bermain</h2>
+
       <p class="howto-intro">
-        tebak <strong>kata bahasa indonesia</strong> 5 huruf dalam 6 percobaan.
+        Tebak <strong>kata bahasa Indonesia</strong> berhuruf lima dalam enam percobaan.
       </p>
-      
+
       <p class="howto-rule">
-        setiap tebakan harus berupa kata 5 huruf yang valid. tekan tombol <strong>enter</strong> untuk mengirim.
+        Setiap tebakan harus berupa kata lima huruf yang valid. Tekan tombol <strong>Enter</strong> untuk mengirim.
       </p>
-      
+
       <p class="howto-rule">
-        setelah setiap tebakan, warna kotak akan berubah untuk menunjukkan seberapa dekat tebakanmu dengan kata target.
+        Setelah setiap tebakan, warna kotak akan berubah untuk menunjukkan seberapa dekat tebakan Anda dengan kata target.
       </p>
-      
-      <h3 class="howto-section">contoh</h3>
-      
+
+      <h3 class="howto-section">Contoh</h3>
+
       <div class="howto-example">
         <div class="howto-row">
           <div class="howto-tile correct">B</div>
@@ -135,9 +143,9 @@
           <div class="howto-tile">U</div>
           <div class="howto-tile">T</div>
         </div>
-        <p class="howto-caption">huruf <strong>B</strong> ada di kata target dan posisinya benar.</p>
+        <p class="howto-caption">Huruf <strong>B</strong> ada di kata target dan posisinya benar.</p>
       </div>
-      
+
       <div class="howto-example">
         <div class="howto-row">
           <div class="howto-tile">P</div>
@@ -146,9 +154,9 @@
           <div class="howto-tile">A</div>
           <div class="howto-tile">S</div>
         </div>
-        <p class="howto-caption">huruf <strong>A</strong> ada di kata target tapi posisinya salah.</p>
+        <p class="howto-caption">Huruf <strong>A</strong> ada di kata target tetapi posisinya salah.</p>
       </div>
-      
+
       <div class="howto-example">
         <div class="howto-row">
           <div class="howto-tile">M</div>
@@ -157,66 +165,67 @@
           <div class="howto-tile">I</div>
           <div class="howto-tile absent">S</div>
         </div>
-        <p class="howto-caption">huruf <strong>S</strong> tidak ada di kata target.</p>
+        <p class="howto-caption">Huruf <strong>S</strong> tidak ada di kata target.</p>
       </div>
-      
-      <h3 class="howto-section">aturan tambahan</h3>
-      
+
+      <h3 class="howto-section">Aturan Tambahan</h3>
+
       <ul class="howto-list">
-        <li>setiap hari ada <strong>5 slot</strong> dengan kata berbeda</li>
-        <li>kata target sama untuk semua pemain</li>
-        <li>skor dihitung dari jumlah tebakan + kecepatan</li>
-        <li>kata-kata baru tersedia setiap hari pukul 00:00 wib</li>
+        <li>Setiap hari tersedia <strong>5 slot</strong> dengan kata yang berbeda.</li>
+        <li>Kata target sama untuk seluruh pemain.</li>
+        <li>Skor dihitung berdasarkan jumlah tebakan dan kecepatan.</li>
+        <li>Kata baru tersedia setiap hari pukul 07:00 WIB.</li>
       </ul>
-      
-      <button id="howto-ok" class="modal-button" type="button">mengerti, mulai main</button>
+
+      <button id="howto-ok" class="modal-button" type="button">Mengerti, Mulai Bermain</button>
     </div>
   </div>
 
-  <!-- Modal: Changelog popup (auto, first-time per version) -->
-  <div id="changelog-modal" class="modal hidden">
-    <div class="modal-content changelog-popup-content">
-      <button id="changelog-popup-close" class="modal-close" type="button" aria-label="tutup">✕</button>
-      <div class="changelog-popup-badge">✨ ada yang baru</div>
-      <h2 id="changelog-popup-version" class="changelog-popup-version"></h2>
-      <h3 id="changelog-popup-title" class="changelog-popup-title"></h3>
-      <ul id="changelog-popup-changes" class="changelog-popup-changes"></ul>
-      <button id="changelog-popup-ok" class="modal-button" type="button">mantap, mengerti!</button>
-      <a href="updates.html" class="changelog-popup-link">lihat semua riwayat update →</a>
-    </div>
-  </div>
-
-  <!-- Modal: Riwayat slot -->
+  <!-- ===== MODAL: Riwayat Slot ===== -->
   <div id="history-modal" class="modal hidden">
     <div class="modal-content history-content">
-      <button id="history-close" class="modal-close" type="button" aria-label="tutup">✕</button>
-      <h2 class="howto-title">riwayat hari ini</h2>
-      <p class="howto-rule" style="text-align:center;">pilih slot untuk lihat tebakan kamu di slot itu.</p>
-      
+      <button id="history-close" class="modal-close" type="button" aria-label="Tutup">✕</button>
+      <h2 class="howto-title">Riwayat Hari Ini</h2>
+      <p class="howto-rule" style="text-align:center;">Pilih slot untuk melihat tebakan Anda di slot tersebut.</p>
+
       <div id="history-slots" class="history-slots">
         <!-- Tombol slot dibuat via JS -->
       </div>
-      
+
       <p id="history-empty" class="empty-note hidden">
-        kamu belum main slot apapun hari ini.
+        Anda belum memainkan slot apa pun hari ini.
       </p>
     </div>
   </div>
 
+  <!-- ===== MODAL: Changelog Popup ===== -->
+  <div id="changelog-modal" class="modal hidden">
+    <div class="modal-content changelog-popup-content">
+      <button id="changelog-popup-close" class="modal-close" type="button" aria-label="Tutup">✕</button>
+      <div class="changelog-popup-badge">Pembaruan Terbaru</div>
+      <h2 id="changelog-popup-version" class="changelog-popup-version"></h2>
+      <h3 id="changelog-popup-title" class="changelog-popup-title"></h3>
+      <ul id="changelog-popup-changes" class="changelog-popup-changes"></ul>
+      <button id="changelog-popup-ok" class="modal-button" type="button">Mengerti</button>
+      <a href="updates.html" class="changelog-popup-link">Lihat Seluruh Riwayat Pembaruan →</a>
+    </div>
+  </div>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="site-footer">
+    <div class="site-footer-links">
+      <a href="privacy.html">Kebijakan Privasi</a>
+      <span>·</span>
+      <a href="terms.html">Syarat & Ketentuan</a>
+      <span>·</span>
+      <a href="https://github.com/manasardi/katakatla" target="_blank" rel="noopener">Repositori GitHub</a>
+    </div>
+  </footer>
+
+  <!-- ===== SCRIPTS ===== -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="supabase-client.js"></script>
   <script src="app.js"></script>
-
-<footer class="site-footer">
-    <div class="site-footer-credit">made with ❤️ by anas</div>
-    <div class="site-footer-links">
-      <a href="privacy.html">privasi</a>
-      <span>·</span>
-      <a href="terms.html">syarat</a>
-      <span>·</span>
-      <a href="https://github.com/manasardi/katakatla" target="_blank" rel="noopener">github</a>
-    </div>
-  </footer>
 </body>
 </html>
