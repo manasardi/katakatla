@@ -3,100 +3,152 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>kebijakan privasi — katakatla</title>
+  <title>katakatla — kebijakan privasi</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%232D7D6F%22/><text y=%22.9em%22 font-size=%2270%22 x=%2250%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22700%22 fill=%22white%22>k</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%237A8C3A%22/><text y=%22.9em%22 font-size=%2270%22 x=%2250%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22700%22 fill=%22white%22>k</text></svg>">
   <link rel="stylesheet" href="style.css">
 
+  <!-- Inline theme apply biar nggak flash -->
+  <script>
+    (function() {
+      const saved = localStorage.getItem('katakatla_theme');
+      const theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
 </head>
 <body>
   <header class="topbar">
     <a href="index.html" class="logo-link">
       <h1 class="logo">katakatla</h1>
     </a>
-    <p class="page-label">kebijakan privasi</p>
+    <p class="page-label">Kebijakan Privasi</p>
   </header>
 
   <main class="legal-page">
-    <a href="index.html" class="back-link">← kembali ke game</a>
+    <div class="page-top-bar">
+      <a href="index.html" class="back-link">← Kembali ke Permainan</a>
+      <button id="theme-toggle" class="lb-link" type="button" aria-label="Ganti Tema" style="margin-top:0;">🌙</button>
+    </div>
 
     <article class="legal-content">
-      <p class="legal-meta">terakhir diperbarui: 6 Mei 2026</p>
+      <p class="legal-meta">Terakhir diperbarui: 5 Juni 2026</p>
 
-      <h2>ringkasan singkat</h2>
-      <p>katakatla adalah game tebak kata 5 huruf gratis yang dibuat oleh Anas. kami percaya transparansi soal data, jadi ini ringkasannya:</p>
+      <h2>Ringkasan</h2>
+      <p>Katakatla adalah permainan tebak kata lima huruf berbahasa Indonesia. Kebijakan ini menjelaskan data yang kami kumpulkan dan bagaimana data tersebut digunakan.</p>
       <ul>
-        <li>kami simpan: username yang kamu pilih, ID anonim, dan riwayat tebakan kamu di game</li>
-        <li>kami <strong>tidak</strong> simpan: nama asli, email, lokasi, atau data pribadi lainnya</li>
-        <li>kami <strong>tidak</strong> jual data kamu ke siapa pun</li>
-        <li>kami <strong>tidak</strong> pasang iklan atau tracking pihak ketiga</li>
+        <li>Yang kami simpan: <strong>username</strong> yang Anda pilih, <strong>ID anonim</strong>, dan <strong>riwayat permainan</strong>.</li>
+        <li>Yang tidak kami simpan: nama asli, alamat email, lokasi, maupun data pribadi lainnya.</li>
+        <li>Kami tidak menjual data Anda kepada pihak mana pun.</li>
+        <li>Kami tidak menampilkan iklan atau pelacak pihak ketiga.</li>
       </ul>
 
-      <h2>data yang kami kumpulkan</h2>
-      <p>saat kamu main katakatla, kami menyimpan informasi berikut:</p>
+      <h2>Data yang Dikumpulkan</h2>
+      <p>Saat Anda bermain Katakatla, kami menyimpan informasi berikut:</p>
       <ul>
-        <li><strong>username</strong> — yang kamu pilih sendiri saat pertama kali main</li>
-        <li><strong>ID pengguna anonim</strong> — kode unik (UUID) yang otomatis dibuat sistem, tidak terhubung ke identitas asli kamu</li>
-        <li><strong>data permainan</strong> — kata yang kamu tebak, jumlah percobaan, durasi main, hasil (menang/kalah), tanggal main</li>
-        <li><strong>statistik</strong> — total skor, win rate, streak, distribusi tebakan</li>
+        <li><strong>Username</strong> — dipilih sendiri oleh Anda pada saat pertama kali bermain.</li>
+        <li><strong>ID pengguna anonim</strong> — kode unik (UUID) yang dibuat otomatis oleh sistem dan tidak terhubung dengan identitas asli Anda.</li>
+        <li><strong>Data permainan</strong> — kata yang ditebak, jumlah percobaan, durasi permainan, hasil (menang/kalah), dan tanggal bermain.</li>
+        <li><strong>Statistik</strong> — total skor, persentase kemenangan, streak, dan distribusi tebakan.</li>
       </ul>
-      <p>kami <strong>tidak</strong> meminta atau menyimpan: alamat email, nomor telepon, lokasi, foto, atau informasi pribadi lainnya.</p>
+      <p>Kami tidak meminta maupun menyimpan: alamat email, nomor telepon, lokasi, foto, atau informasi pribadi lainnya.</p>
 
-      <h2>tujuan pengumpulan data</h2>
-      <p>data di atas dipakai khusus untuk:</p>
+      <h2>Tujuan Pengumpulan Data</h2>
+      <p>Data tersebut digunakan secara terbatas untuk:</p>
       <ul>
-        <li>menjalankan game (nyimpen progress kamu, generate kata harian)</li>
-        <li>menampilkan leaderboard harian, mingguan, dan bulanan</li>
-        <li>menampilkan statistik personal kamu di halaman stats</li>
-        <li>mencegah kecurangan (anti-cheat, validasi durasi tidak wajar)</li>
+        <li>Menjalankan permainan, termasuk menyimpan progres Anda dan menghasilkan kata harian.</li>
+        <li>Menampilkan papan peringkat harian, mingguan, bulanan, dan tahunan.</li>
+        <li>Menampilkan statistik personal Anda pada halaman statistik.</li>
+        <li>Mencegah kecurangan, termasuk validasi durasi permainan yang tidak wajar.</li>
       </ul>
 
-      <h2>cookies dan localStorage</h2>
-      <p>katakatla menggunakan <strong>localStorage</strong> di browser kamu untuk menyimpan progress permainan harian (tebakan kamu yang belum selesai). ini bukan cookie tracking — datanya cuma ada di browser kamu sendiri dan tidak dikirim ke server kami untuk dilacak.</p>
-      <p>kami <strong>tidak</strong> menggunakan cookie pelacakan, Google Analytics, Facebook Pixel, atau tracker pihak ketiga lainnya.</p>
+      <h2>Cookies dan Penyimpanan Lokal</h2>
+      <p>Katakatla menggunakan <strong>localStorage</strong> pada peramban Anda untuk menyimpan progres permainan harian, termasuk tebakan yang belum diselesaikan. Data ini hanya tersimpan pada peramban Anda dan tidak dikirim ke server kami untuk keperluan pelacakan.</p>
+      <p>Kami tidak menggunakan cookie pelacakan, Google Analytics, Facebook Pixel, maupun pelacak pihak ketiga lainnya.</p>
 
-      <h2>pihak ketiga yang kami pakai</h2>
-      <p>katakatla berjalan dengan bantuan dua layanan pihak ketiga:</p>
+      <h2>Layanan Pihak Ketiga</h2>
+      <p>Katakatla menggunakan dua layanan pihak ketiga dalam operasionalnya:</p>
       <ul>
-        <li><strong>Supabase</strong> — untuk menyimpan data game (username, attempts, dst.). Supabase patuh pada standar GDPR. <a href="https://supabase.com/privacy" target="_blank" rel="noopener">kebijakan privasi Supabase</a></li>
-        <li><strong>Vercel</strong> — untuk hosting website. Vercel mungkin mencatat log akses standar (IP, browser, waktu kunjungan) untuk keperluan teknis. <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener">kebijakan privasi Vercel</a></li>
+        <li><strong>Supabase</strong> — untuk menyimpan data permainan. Supabase mematuhi standar GDPR. <a href="https://supabase.com/privacy" target="_blank" rel="noopener">Kebijakan privasi Supabase</a>.</li>
+        <li><strong>Vercel</strong> — untuk hosting situs. Vercel dapat mencatat log akses standar (alamat IP, peramban, waktu kunjungan) untuk keperluan teknis. <a href="https://vercel.com/legal/privacy-policy" target="_blank" rel="noopener">Kebijakan privasi Vercel</a>.</li>
       </ul>
-      <p>kami tidak memiliki kontrol langsung atas data yang dikumpulkan oleh kedua layanan ini, tapi kami memilih mereka karena reputasi keamanan dan kepatuhan privasi.</p>
+      <p>Kami tidak memiliki kontrol langsung atas data yang dikumpulkan oleh kedua layanan tersebut. Pemilihan layanan ini didasarkan pada reputasi keamanan dan kepatuhan privasi.</p>
 
-      <h2>hak kamu sebagai pengguna</h2>
-      <p>sesuai dengan UU Perlindungan Data Pribadi (UU 27/2022) Indonesia, kamu punya hak untuk:</p>
+      <h2>Hak Pengguna</h2>
+      <p>Sesuai dengan Undang-Undang Perlindungan Data Pribadi (UU No. 27 Tahun 2022) Republik Indonesia, Anda memiliki hak untuk:</p>
       <ul>
-        <li><strong>akses</strong> — minta lihat data apa aja yang kami simpan tentang kamu</li>
-        <li><strong>perbaikan</strong> — minta data yang salah diperbaiki (misal: ganti username via halaman stats)</li>
-        <li><strong>penghapusan</strong> — minta semua data kamu dihapus dari database kami</li>
-        <li><strong>penolakan</strong> — berhenti main kapan aja, tanpa konsekuensi</li>
+        <li><strong>Akses</strong> — meminta informasi mengenai data yang kami simpan tentang Anda.</li>
+        <li><strong>Perbaikan</strong> — meminta perbaikan data yang keliru, misalnya mengubah username melalui halaman statistik.</li>
+        <li><strong>Penghapusan</strong> — meminta seluruh data Anda dihapus dari basis data kami.</li>
+        <li><strong>Penolakan</strong> — berhenti bermain kapan saja tanpa konsekuensi.</li>
       </ul>
-      <p>untuk menggunakan hak-hak ini, hubungi kami via email di bagian bawah halaman ini.</p>
+      <p>Untuk menggunakan hak-hak tersebut, silakan menghubungi kami melalui email yang tertera di bagian akhir halaman ini.</p>
 
-      <h2>anak di bawah umur</h2>
-      <p>katakatla cocok dimainkan oleh segala usia. kami tidak meminta data identitas pribadi, jadi tidak ada risiko khusus untuk anak-anak. tapi kami sarankan orang tua untuk mendampingi anak yang main game online.</p>
+      <h2>Pengguna di Bawah Umur</h2>
+      <p>Katakatla dapat dimainkan oleh segala usia. Karena kami tidak meminta data identitas pribadi, tidak terdapat risiko khusus bagi anak-anak. Namun demikian, kami tetap menganjurkan orang tua untuk mendampingi anak dalam bermain permainan daring.</p>
 
-      <h2>keamanan data</h2>
-      <p>kami menggunakan enkripsi standar industri (HTTPS) untuk semua koneksi, dan database kami dilindungi dengan Row Level Security (RLS) Supabase. tapi tidak ada sistem yang 100% aman — jika kamu mencurigai ada masalah keamanan, segera kontak kami.</p>
+      <h2>Keamanan Data</h2>
+      <p>Kami menggunakan enkripsi standar industri (HTTPS) untuk seluruh koneksi, dan basis data kami dilindungi dengan Row Level Security (RLS) Supabase. Tidak ada sistem yang sepenuhnya aman dari risiko, oleh karena itu apabila Anda mencurigai adanya masalah keamanan, mohon segera menghubungi kami.</p>
 
-      <h2>perubahan kebijakan</h2>
-      <p>jika ada perubahan kebijakan privasi, akan diumumkan di halaman ini dengan update tanggal di atas. lanjut main berarti kamu setuju dengan versi terbaru.</p>
+      <h2>Perubahan Kebijakan</h2>
+      <p>Setiap perubahan pada kebijakan privasi ini akan diumumkan pada halaman ini disertai pembaruan tanggal di bagian atas. Dengan terus menggunakan layanan, Anda dianggap menyetujui versi terbaru kebijakan ini.</p>
 
-      <h2>kontak</h2>
-      <p>ada pertanyaan, request data, atau mau lapor masalah privasi?</p>
-      <p>hubungi: <a href="mailto:anas.ardiansyah80@gmail.com">anas.ardiansyah80@gmail.com</a></p>
-      <p class="legal-note">katakatla adalah project independen yang dibuat oleh Anas. game ini gratis, tanpa iklan, tanpa tracking, dan tidak terafiliasi dengan institusi mana pun.</p>
+      <h2>Kontak</h2>
+      <p>Pertanyaan, permintaan data, atau pelaporan masalah privasi dapat disampaikan melalui email:</p>
+      <p><a href="mailto:anas.ardiansyah80@gmail.com">anas.ardiansyah80@gmail.com</a></p>
+
+      <p class="legal-note">Katakatla merupakan proyek independen. Permainan ini gratis, bebas iklan, tanpa pelacakan, dan tidak berafiliasi dengan institusi mana pun.</p>
     </article>
 
-    <footer class="legal-footer-nav">
-      <a href="terms.html">syarat penggunaan</a>
+    <nav class="legal-footer-nav">
+      <a href="terms.html">Syarat & Ketentuan</a>
       <span>·</span>
-      <a href="index.html">kembali ke game</a>
-    </footer>
+      <a href="index.html">Kembali ke Permainan</a>
+    </nav>
   </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-links">
+      <a href="privacy.html">Kebijakan Privasi</a>
+      <span>·</span>
+      <a href="terms.html">Syarat & Ketentuan</a>
+      <span>·</span>
+      <a href="https://github.com/manasardi/katakatla" target="_blank" rel="noopener">Repositori GitHub</a>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      const THEME_KEY = 'katakatla_theme';
+      function getEffectiveTheme() {
+        const saved = localStorage.getItem(THEME_KEY);
+        if (saved) return saved;
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        const btn = document.getElementById('theme-toggle');
+        if (btn) {
+          btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+          btn.setAttribute('aria-label', theme === 'dark' ? 'Mode Terang' : 'Mode Gelap');
+        }
+      }
+      function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme') || getEffectiveTheme();
+        const next = current === 'dark' ? 'light' : 'dark';
+        localStorage.setItem(THEME_KEY, next);
+        applyTheme(next);
+      }
+      applyTheme(getEffectiveTheme());
+      document.addEventListener('DOMContentLoaded', function() {
+        const btn = document.getElementById('theme-toggle');
+        if (btn) btn.addEventListener('click', toggleTheme);
+      });
+    })();
+  </script>
 </body>
 </html>

@@ -3,116 +3,165 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>syarat penggunaan — katakatla</title>
+  <title>katakatla — syarat & ketentuan</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%232D7D6F%22/><text y=%22.9em%22 font-size=%2270%22 x=%2250%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22700%22 fill=%22white%22>k</text></svg>">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%237A8C3A%22/><text y=%22.9em%22 font-size=%2270%22 x=%2250%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22700%22 fill=%22white%22>k</text></svg>">
   <link rel="stylesheet" href="style.css">
+
+  <!-- Inline theme apply biar nggak flash -->
+  <script>
+    (function() {
+      const saved = localStorage.getItem('katakatla_theme');
+      const theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
 </head>
 <body>
   <header class="topbar">
     <a href="index.html" class="logo-link">
       <h1 class="logo">katakatla</h1>
     </a>
-    <p class="page-label">syarat penggunaan</p>
+    <p class="page-label">Syarat & Ketentuan</p>
   </header>
 
   <main class="legal-page">
-    <a href="index.html" class="back-link">← kembali ke game</a>
+    <div class="page-top-bar">
+      <a href="index.html" class="back-link">← Kembali ke Permainan</a>
+      <button id="theme-toggle" class="lb-link" type="button" aria-label="Ganti Tema" style="margin-top:0;">🌙</button>
+    </div>
 
     <article class="legal-content">
-      <p class="legal-meta">terakhir diperbarui: 6 Mei 2026</p>
+      <p class="legal-meta">Terakhir diperbarui: 5 Juni 2026</p>
 
-      <h2>selamat datang di katakatla</h2>
-      <p>dengan main katakatla, kamu setuju dengan syarat-syarat di bawah ini. kalau kamu tidak setuju, silakan tidak main game ini. simple aja.</p>
+      <p>Dengan menggunakan layanan Katakatla, Anda dianggap menyetujui seluruh syarat dan ketentuan berikut. Apabila Anda tidak menyetujui sebagian atau seluruh ketentuan ini, mohon untuk tidak menggunakan layanan.</p>
 
-      <h2>1. tentang katakatla</h2>
-      <p>katakatla adalah game tebak kata 5 huruf berbahasa Indonesia, terinspirasi dari Wordle. game ini:</p>
+      <h2>1. Tentang Katakatla</h2>
+      <p>Katakatla adalah permainan tebak kata lima huruf berbahasa Indonesia, terinspirasi oleh Wordle. Permainan ini bersifat:</p>
       <ul>
-        <li>gratis — tanpa biaya, tanpa langganan</li>
-        <li>tanpa iklan — kamu nggak akan dikejar iklan saat main</li>
-        <li>independen — dibuat oleh satu orang (Anas), bukan perusahaan</li>
-        <li>open source — kode tersedia di <a href="https://github.com/manasardi/katakatla" target="_blank" rel="noopener">GitHub</a> dengan lisensi MIT</li>
+        <li><strong>Gratis</strong> — tidak dikenakan biaya maupun langganan.</li>
+        <li><strong>Bebas iklan</strong> — tidak menampilkan iklan dalam bentuk apa pun.</li>
+        <li><strong>Independen</strong> — dikembangkan secara mandiri, bukan oleh perusahaan.</li>
+        <li><strong>Sumber terbuka</strong> — kode tersedia di <a href="https://github.com/manasardi/katakatla" target="_blank" rel="noopener">GitHub</a> dengan lisensi MIT.</li>
       </ul>
 
-      <h2>2. hak penggunaan</h2>
-      <p>kamu boleh:</p>
+      <h2>2. Hak Penggunaan</h2>
+      <p>Anda diperkenankan untuk:</p>
       <ul>
-        <li>main katakatla kapan aja, sebanyak yang tersedia per hari</li>
-        <li>share hasil tebakan kamu ke teman atau social media</li>
-        <li>memberi feedback atau saran (sangat dihargai!)</li>
+        <li>Memainkan Katakatla kapan saja sesuai jumlah slot yang tersedia setiap hari.</li>
+        <li>Membagikan hasil permainan kepada teman atau melalui media sosial.</li>
+        <li>Menyampaikan umpan balik atau saran kepada pengembang.</li>
       </ul>
 
-      <h2>3. perilaku yang diharapkan</h2>
-      <p>untuk menjaga komunitas katakatla nyaman, kamu <strong>tidak</strong> boleh:</p>
+      <h2>3. Perilaku yang Diharapkan</h2>
+      <p>Demi menjaga kenyamanan komunitas Katakatla, Anda dilarang untuk:</p>
       <ul>
-        <li>menggunakan username yang mengandung kata kasar, SARA, atau menyinggung</li>
-        <li>menggunakan username yang menyamar sebagai orang lain (impersonation)</li>
-        <li>melakukan kecurangan dengan automation/bot/script untuk farming skor</li>
-        <li>mencoba meretas, mengganggu, atau merusak sistem game</li>
-        <li>mengeksploitasi bug untuk keuntungan di leaderboard</li>
+        <li>Menggunakan username yang mengandung kata kasar, unsur SARA, atau bersifat menyinggung.</li>
+        <li>Menggunakan username yang menyamar sebagai orang lain (impersonasi).</li>
+        <li>Melakukan kecurangan dengan otomatisasi, bot, atau skrip untuk mengakumulasi skor.</li>
+        <li>Mencoba meretas, mengganggu, atau merusak sistem permainan.</li>
+        <li>Memanfaatkan celah perangkat lunak untuk keuntungan pada papan peringkat.</li>
       </ul>
-      <p>kalau kami nemu pelanggaran, kami berhak:</p>
+      <p>Apabila kami menemukan pelanggaran, kami berhak untuk:</p>
       <ul>
-        <li>mengubah atau menghapus username kamu</li>
-        <li>menghapus skor dari leaderboard</li>
-        <li>memblokir akses kamu ke game (kasus ekstrim)</li>
-      </ul>
-
-      <h2>4. hak kekayaan intelektual</h2>
-      <p>nama "katakatla", logo, design game, dan kode adalah milik Anas (dengan kode di-lisensikan MIT). kamu boleh main, tapi tidak boleh:</p>
-      <ul>
-        <li>mengklaim game ini sebagai karya kamu</li>
-        <li>menjual atau mengkomersialisasikan tanpa izin</li>
-        <li>membuat copy persis dengan branding yang sama</li>
-      </ul>
-      <p>kalau kamu mau bikin game serupa berbasis kode kami, silakan fork dari GitHub dengan tetap mematuhi lisensi MIT (kasih atribusi).</p>
-
-      <h2>5. konten kamu</h2>
-      <p>username yang kamu pilih dan tebakan kamu adalah milik kamu. tapi dengan main katakatla, kamu memberi izin pada kami untuk:</p>
-      <ul>
-        <li>menampilkan username kamu di leaderboard publik</li>
-        <li>menyimpan riwayat tebakan untuk perhitungan statistik dan streak</li>
-      </ul>
-      <p>kalau kamu mau username/data kamu dihapus, hubungi kami (lihat kebijakan privasi).</p>
-
-      <h2>6. ketersediaan layanan</h2>
-      <p>katakatla disediakan "as-is" alias apa adanya. kami berusaha menjaga game tetap online, tapi:</p>
-      <ul>
-        <li>tidak ada jaminan uptime 100% — bisa aja maintenance atau ada bug</li>
-        <li>fitur bisa berubah, ditambah, atau dihapus tanpa pemberitahuan</li>
-        <li>kalau game offline atau bermasalah, mohon kesabarannya — ini project pribadi</li>
+        <li>Mengubah atau menghapus username Anda.</li>
+        <li>Menghapus skor dari papan peringkat.</li>
+        <li>Memblokir akses Anda ke permainan dalam kasus yang ekstrem.</li>
       </ul>
 
-      <h2>7. batasan tanggung jawab</h2>
-      <p>katakatla adalah game hiburan. kami tidak bertanggung jawab atas:</p>
+      <h2>4. Hak Kekayaan Intelektual</h2>
+      <p>Nama <strong>Katakatla</strong>, logo, desain permainan, dan kode merupakan milik pengembang. Kode dilisensikan di bawah lisensi MIT. Anda diperkenankan memainkan permainan, namun dilarang untuk:</p>
       <ul>
-        <li>kehilangan progress karena bug, browser crash, atau localStorage terhapus</li>
-        <li>dampak emosional dari kalah/menang (kami harap kamu fun!)</li>
-        <li>perubahan ranking di leaderboard karena reset atau koreksi data</li>
+        <li>Mengklaim permainan ini sebagai karya pribadi Anda.</li>
+        <li>Menjual atau mengomersialkan permainan tanpa izin tertulis.</li>
+        <li>Membuat salinan persis dengan identitas merek yang sama.</li>
+      </ul>
+      <p>Apabila Anda ingin mengembangkan permainan serupa berbasis kode kami, silakan melakukan fork melalui GitHub dengan tetap mematuhi ketentuan lisensi MIT, termasuk memberikan atribusi yang sesuai.</p>
+
+      <h2>5. Konten Pengguna</h2>
+      <p>Username yang Anda pilih dan tebakan yang Anda buat merupakan milik Anda. Dengan menggunakan Katakatla, Anda memberikan izin kepada kami untuk:</p>
+      <ul>
+        <li>Menampilkan username Anda pada papan peringkat publik.</li>
+        <li>Menyimpan riwayat tebakan untuk perhitungan statistik dan streak.</li>
+      </ul>
+      <p>Apabila Anda menginginkan username atau data Anda dihapus, silakan menghubungi kami sebagaimana dijelaskan pada <a href="privacy.html">Kebijakan Privasi</a>.</p>
+
+      <h2>6. Ketersediaan Layanan</h2>
+      <p>Katakatla disediakan <strong>sebagaimana adanya</strong> (<em>as-is</em>). Kami berupaya menjaga ketersediaan layanan, namun:</p>
+      <ul>
+        <li>Tidak ada jaminan uptime 100% — dapat terjadi pemeliharaan sistem atau kendala teknis.</li>
+        <li>Fitur dapat berubah, ditambahkan, atau dihapus tanpa pemberitahuan sebelumnya.</li>
+        <li>Apabila layanan mengalami gangguan, kami memohon pengertian Anda.</li>
       </ul>
 
-      <h2>8. perubahan syarat</h2>
-      <p>syarat penggunaan ini bisa berubah seiring waktu. perubahan akan diumumkan di halaman ini dengan update tanggal di atas. lanjut main berarti kamu setuju dengan versi terbaru.</p>
+      <h2>7. Batasan Tanggung Jawab</h2>
+      <p>Katakatla merupakan permainan hiburan. Kami tidak bertanggung jawab atas:</p>
+      <ul>
+        <li>Kehilangan progres akibat kendala teknis, peramban yang mengalami crash, atau localStorage yang terhapus.</li>
+        <li>Dampak emosional yang timbul dari kemenangan maupun kekalahan dalam permainan.</li>
+        <li>Perubahan peringkat pada papan peringkat akibat reset sistem atau koreksi data.</li>
+      </ul>
 
-      <h2>9. hukum yang berlaku</h2>
-      <p>syarat ini diatur berdasarkan hukum Republik Indonesia. kalau ada sengketa yang nggak bisa diselesaikan secara baik-baik, akan diselesaikan di pengadilan yang berwenang di Indonesia.</p>
+      <h2>8. Perubahan Syarat</h2>
+      <p>Syarat dan ketentuan ini dapat berubah dari waktu ke waktu. Setiap perubahan akan diumumkan pada halaman ini disertai pembaruan tanggal di bagian atas. Dengan terus menggunakan layanan, Anda dianggap menyetujui versi terbaru ketentuan ini.</p>
 
-      <h2>10. kontak</h2>
-      <p>ada pertanyaan tentang syarat penggunaan, feedback, atau mau lapor sesuatu?</p>
-      <p>hubungi: <a href="mailto:anas.ardiansyah80@gmail.com">anas.ardiansyah80@gmail.com</a></p>
+      <h2>9. Hukum yang Berlaku</h2>
+      <p>Syarat dan ketentuan ini tunduk pada hukum yang berlaku di Republik Indonesia. Setiap sengketa yang tidak dapat diselesaikan secara musyawarah akan diselesaikan melalui pengadilan yang berwenang di wilayah Republik Indonesia.</p>
 
-      <p class="legal-note">terima kasih udah main katakatla. semoga kamu enjoy! 🎯</p>
+      <h2>10. Kontak</h2>
+      <p>Pertanyaan, umpan balik, atau pelaporan terkait syarat dan ketentuan ini dapat disampaikan melalui email:</p>
+      <p><a href="mailto:anas.ardiansyah80@gmail.com">anas.ardiansyah80@gmail.com</a></p>
     </article>
 
-    <footer class="legal-footer-nav">
-      <a href="privacy.html">kebijakan privasi</a>
+    <nav class="legal-footer-nav">
+      <a href="privacy.html">Kebijakan Privasi</a>
       <span>·</span>
-      <a href="index.html">kembali ke game</a>
-    </footer>
+      <a href="index.html">Kembali ke Permainan</a>
+    </nav>
   </main>
+
+  <footer class="site-footer">
+    <div class="site-footer-links">
+      <a href="privacy.html">Kebijakan Privasi</a>
+      <span>·</span>
+      <a href="terms.html">Syarat & Ketentuan</a>
+      <span>·</span>
+      <a href="https://github.com/manasardi/katakatla" target="_blank" rel="noopener">Repositori GitHub</a>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      const THEME_KEY = 'katakatla_theme';
+      function getEffectiveTheme() {
+        const saved = localStorage.getItem(THEME_KEY);
+        if (saved) return saved;
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+      function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        const btn = document.getElementById('theme-toggle');
+        if (btn) {
+          btn.textContent = theme === 'dark' ? '☀️' : '🌙';
+          btn.setAttribute('aria-label', theme === 'dark' ? 'Mode Terang' : 'Mode Gelap');
+        }
+      }
+      function toggleTheme() {
+        const current = document.documentElement.getAttribute('data-theme') || getEffectiveTheme();
+        const next = current === 'dark' ? 'light' : 'dark';
+        localStorage.setItem(THEME_KEY, next);
+        applyTheme(next);
+      }
+      applyTheme(getEffectiveTheme());
+      document.addEventListener('DOMContentLoaded', function() {
+        const btn = document.getElementById('theme-toggle');
+        if (btn) btn.addEventListener('click', toggleTheme);
+      });
+    })();
+  </script>
 </body>
 </html>

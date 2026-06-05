@@ -13,16 +13,117 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%237A8C3A%22/><text y=%22.9em%22 font-size=%2270%22 x=%2250%22 text-anchor=%22middle%22 font-family=%22sans-serif%22 font-weight=%22700%22 fill=%22white%22>k</text></svg>">
   <link rel="stylesheet" href="style.css">
 
-  <!-- Inline theme apply biar nggak flash -->
+  <!-- Inline theme + intro check (mencegah flash) -->
   <script>
     (function() {
+      // Theme
       const saved = localStorage.getItem('katakatla_theme');
       const theme = saved || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
       document.documentElement.setAttribute('data-theme', theme);
+
+      // Intro: kalau udah dilihat session ini, tandai biar CSS langsung hide overlay
+      if (sessionStorage.getItem('katakatla_intro_seen_session') === 'true') {
+        document.documentElement.classList.add('intro-seen');
+      }
     })();
   </script>
 </head>
 <body>
+
+  <!-- ===== INTRO OVERLAY (auto-hidden by CSS jika udah dilihat session ini) ===== -->
+  <div id="intro-overlay" class="intro-overlay">
+    <div class="intro">
+      <div class="intro-tiles" id="intro-tiles"></div>
+      <p class="intro-subtitle" id="intro-subtitle">Lima Huruf · Enam Tebakan · Setiap Hari</p>
+      <p class="intro-hint" id="intro-hint">Klik di mana saja untuk memulai</p>
+    </div>
+  </div>
+
+  <!-- Intro animation script — inline biar nggak nunggu app.js load -->
+  <script>
+    (function() {
+      // Skip kalau udah dilihat session ini
+      if (document.documentElement.classList.contains('intro-seen')) return;
+
+      const PATTERN = [
+        { letter: '',  color: '' },
+        { letter: 'K', color: 'present' },
+        { letter: 'A', color: 'correct' },
+        { letter: 'T', color: 'present' },
+        { letter: 'A', color: 'correct' },
+        { letter: '',  color: '' },
+        { letter: 'K', color: 'correct' },
+        { letter: 'A', color: 'present' },
+        { letter: 'T', color: 'correct' },
+        { letter: 'L', color: 'present' },
+        { letter: 'A', color: 'correct' },
+        { letter: '',  color: '' },
+      ];
+
+      const TILE_STAGGER   = 40;
+      const LETTER_STAGGER = 70;
+      const FLIP_DURATION  = 500;
+
+      const overlay        = document.getElementById('intro-overlay');
+      const tilesContainer = document.getElementById('intro-tiles');
+      const subtitle       = document.getElementById('intro-subtitle');
+      const hint           = document.getElementById('intro-hint');
+
+      // Build tiles
+      PATTERN.forEach(() => {
+        const el = document.createElement('div');
+        el.className = 'intro-tile';
+        tilesContainer.appendChild(el);
+      });
+
+      // Stage 1: pop-in (letter tiles only)
+      PATTERN.forEach((tile, i) => {
+        if (!tile.letter) return;
+        setTimeout(() => {
+          tilesContainer.children[i].classList.add('show');
+        }, i * TILE_STAGGER);
+      });
+
+      // Stage 2: flip-reveal letter tiles
+      const stage2Start = PATTERN.length * TILE_STAGGER + 150;
+      let letterCount = 0;
+
+      PATTERN.forEach((tile, i) => {
+        if (!tile.letter) return;
+
+        const flipDelay = stage2Start + letterCount * LETTER_STAGGER;
+        letterCount++;
+
+        setTimeout(() => {
+          const el = tilesContainer.children[i];
+          el.classList.add('flip');
+          setTimeout(() => {
+            el.textContent = tile.letter;
+            el.classList.add(tile.color);
+          }, FLIP_DURATION / 2);
+        }, flipDelay);
+      });
+
+      // Stage 3: subtitle slide up
+      const letterCountTotal = PATTERN.filter(t => t.letter).length;
+      const stage3Start = stage2Start + (letterCountTotal - 1) * LETTER_STAGGER + 200;
+
+      setTimeout(() => subtitle.classList.add('show'), stage3Start);
+      setTimeout(() => hint.classList.add('show'), stage3Start + 600);
+
+      // Click to fade out
+      function fadeOut() {
+        overlay.classList.add('fade-out');
+        sessionStorage.setItem('katakatla_intro_seen_session', 'true');
+        // Setelah transition opacity selesai, baru hide
+        setTimeout(() => {
+          overlay.style.display = 'none';
+        }, 700);
+      }
+
+      overlay.addEventListener('click', fadeOut);
+    })();
+  </script>
 
   <!-- ===== TOPBAR ===== -->
   <header class="topbar">
